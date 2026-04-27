@@ -4,7 +4,7 @@
 
 ## 현재 단계
 
-**[M3] 대본 작성 (script_writer)** - 대기중
+**[M4] 업로드 예약 (uploader)** - 대기중
 
 ---
 
@@ -30,9 +30,12 @@
 │   ├── [v] M2-4. YouTube 트렌드 - 8개 국가 (youtube_trend.py)
 │   ├── [v] M2-5. 통합 서비스 (service.py)
 │   └── [v] M2-6. FastAPI 라우터 (api/sourcing.py)
-├── [ ] [M3] 대본 작성 (script_writer)
-│   ├── [ ] M3-1. 소재 입력 -> 대본 생성 (OpenAI API)
-│   └── [ ] M3-2. 대본 템플릿 관리
+├── [v] [M3] 대본 작성 (script_writer)
+│   ├── [v] M3-1. 데이터 모델 (models.py)
+│   ├── [v] M3-2. OpenAI 대본 생성기 (generator.py)
+│   ├── [v] M3-3. 프롬프트 템플릿 - 4가지 어조 (templates.py)
+│   ├── [v] M3-4. 서비스 레이어 (service.py)
+│   └── [v] M3-5. FastAPI 라우터 (api/script.py)
 ├── [ ] [M4] 업로드 예약 (uploader)
 │   ├── [ ] M4-1. 영상 메타데이터 설정
 │   ├── [ ] M4-2. 유튜브 업로드 자동화
@@ -76,6 +79,12 @@
   - 앱명: TubeFlow
   - 다크 테마, 좌측 사이드바 + 4탭 구조
   - references/01-design/ 에 전체 파일 저장 (HTML + 7개 JSX)
+- [v] M3 대본 작성 완료
+  - models.py (Script, ScriptRequest 데이터 모델)
+  - templates.py (4가지 어조 프롬프트 - 정보/스토리/유머/드라마)
+  - generator.py (OpenAI gpt-4o 대본 생성, 섹션 파싱)
+  - service.py (생성 + JSON 저장)
+  - api/script.py (POST /api/v1/script/generate)
 - [v] M2 소재 수집 완료 (여행 특화 멀티소스로 전면 교체)
   - Reddit API 접근 불가로 인해 4개 소스로 교체
   - guardian.py (The Guardian Travel API - 5,000건/일)
@@ -95,4 +104,4 @@
 
 ## 다음 할 일
 
-**[M3-1] 대본 생성기** (backend/core/script_writer/) - OpenAI API 연동
+**[M4-1] 영상 메타데이터 설정** (backend/core/uploader/)

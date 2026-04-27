@@ -33,12 +33,12 @@ async def health_check():
     }
 
 
-from backend.api import sourcing
+from backend.api import sourcing, script
 app.include_router(sourcing.router, prefix="/api/v1")
+app.include_router(script.router,   prefix="/api/v1")
 
 # 개발 완료 후 순차 등록
-# from backend.api import script, uploader, trend
-# app.include_router(script.router,   prefix="/api/v1")
+# from backend.api import uploader, trend
 # app.include_router(uploader.router, prefix="/api/v1")
 # app.include_router(trend.router,    prefix="/api/v1")
 
