@@ -34,11 +34,17 @@ RECENT_CHANGES=$(find "$PROJECT_ROOT" \
   -not -path "*/templates/*" \
   -not -path "*/references/*" \
   -not -path "*/.git/*" \
+  -not -path "*/__pycache__/*" \
+  -not -path "*/logs/*" \
+  -not -path "*/data/*" \
   -not -name "PROGRESS.md" \
   -not -name "PROJECT.md" \
   -not -name "README.md" \
   -not -name "CLAUDE.md" \
   -not -name "*.template.md" \
+  -not -name "*.pyc" \
+  -not -name "*.pyo" \
+  -not -name "*.log" \
   -newer "$PROJECT_ROOT/PROGRESS.md" \
   -type f 2>/dev/null | head -5)
 
