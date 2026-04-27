@@ -4,7 +4,7 @@
 
 ## 현재 단계
 
-**[M1] 공통 기반 (shared/)** - 대기중
+**[M2] 소재 수집 (content_sourcing)** - 대기중
 
 ---
 
@@ -17,10 +17,12 @@
 │   ├── [v] D0-1. 전체 화면 구성 및 네비게이션 구조 설계
 │   ├── [v] D0-2. 각 탭별 와이어프레임 작성
 │   └── [v] D0-3. 디자인 시안 확정 및 references/01-design/ 저장
-├── [ ] [M1] 공통 기반 (shared/)
-│   ├── [ ] M1-1. 프로젝트 환경 설정 (.env, config)
-│   ├── [ ] M1-2. API 인증 모듈 (YouTube, Reddit, Anthropic)
-│   └── [ ] M1-3. 공통 유틸리티 (로거, 파일 처리)
+├── [v] [M1] 공통 기반 (shared/)
+│   ├── [v] M1-1. 프로젝트 환경 설정 (.env.example, requirements.txt)
+│   ├── [v] M1-2. 설정 관리 모듈 (shared/config/settings.py)
+│   ├── [v] M1-3. API 인증 모듈 (shared/auth/ - Reddit, YouTube, Anthropic)
+│   ├── [v] M1-4. 공통 유틸리티 (shared/utils/ - 로거, 파일 처리)
+│   └── [v] M1-5. 백엔드 진입점 (backend/main.py)
 ├── [ ] [M2] 소재 수집 (content_sourcing)
 │   ├── [ ] M2-1. Reddit 소재 수집기
 │   ├── [ ] M2-2. 소재 필터링 및 정리
@@ -71,9 +73,15 @@
   - 앱명: TubeFlow
   - 다크 테마, 좌측 사이드바 + 4탭 구조
   - references/01-design/ 에 전체 파일 저장 (HTML + 7개 JSX)
+- [v] M1 공통 기반 완료
+  - requirements.txt, .env.example
+  - shared/config/settings.py (pydantic-settings)
+  - shared/auth/ (Reddit, YouTube, Anthropic 인증)
+  - shared/utils/ (로거, 파일 유틸)
+  - backend/main.py (FastAPI 진입점)
 
 ---
 
 ## 다음 할 일
 
-**[M1-1] 프로젝트 환경 설정** (.env, config, requirements.txt)
+**[M2-1] Reddit 소재 수집기** (backend/core/content_sourcing/)
