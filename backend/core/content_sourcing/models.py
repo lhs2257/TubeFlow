@@ -3,17 +3,17 @@ from datetime import datetime
 
 
 @dataclass
-class RedditPost:
+class Article:
     id: str
     title: str
     body: str
-    subreddit: str
-    score: int
-    num_comments: int
+    source: str          # guardian | newsapi | rss | youtube
+    source_name: str     # 매체명 (예: The Guardian, BBC Travel)
     url: str
-    permalink: str
-    created_at: datetime
-    flair: str = ""
+    published_at: datetime
+    country: str = ""
+    category: str = "travel"
+    thumbnail: str = ""
     is_selected: bool = False
 
     def to_dict(self) -> dict:
@@ -21,22 +21,21 @@ class RedditPost:
             "id": self.id,
             "title": self.title,
             "body": self.body,
-            "subreddit": self.subreddit,
-            "score": self.score,
-            "num_comments": self.num_comments,
+            "source": self.source,
+            "source_name": self.source_name,
             "url": self.url,
-            "permalink": f"https://reddit.com{self.permalink}",
-            "created_at": self.created_at.isoformat(),
-            "flair": self.flair,
+            "published_at": self.published_at.isoformat(),
+            "country": self.country,
+            "category": self.category,
+            "thumbnail": self.thumbnail,
             "is_selected": self.is_selected,
         }
 
 
 @dataclass
 class CollectConfig:
-    subreddits: list[str]
-    time_filter: str = "week"       # hour | day | week | month | year | all
-    sort: str = "top"               # top | hot | new | rising
-    limit: int = 50
-    min_score: int = 0
-    exclude_keywords: list[str] = field(default_factory=list)
+    keywords: list[str] = field(default_factory=lambda: ["travel", "tourism"])
+    countries: list[str] = field(default_factory=list)   # 빈 리스트 = 전세계
+    language: str = "en"
+    limit: int = 20
+    sources: list[str] = field(default_factory=lambda: ["guardian", "newsapi", "rss", "youtube"])

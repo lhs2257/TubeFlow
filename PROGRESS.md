@@ -1,6 +1,6 @@
 # 작업 현황 (PROGRESS.md)
 
-> 최종 업데이트: 2026-04-27 (환경변수 설정 중)
+> 최종 업데이트: 2026-04-27
 
 ## 현재 단계
 
@@ -23,10 +23,13 @@
 │   ├── [v] M1-3. API 인증 모듈 (shared/auth/ - Reddit, YouTube, OpenAI)
 │   ├── [v] M1-4. 공통 유틸리티 (shared/utils/ - 로거, 파일 처리)
 │   └── [v] M1-5. 백엔드 진입점 (backend/main.py)
-├── [v] [M2] 소재 수집 (content_sourcing)
-│   ├── [v] M2-1. Reddit 소재 수집기 (collector.py)
-│   ├── [v] M2-2. 소재 필터링 및 저장 (service.py, models.py)
-│   └── [v] M2-3. FastAPI 라우터 연동 (api/sourcing.py)
+├── [v] [M2] 소재 수집 (content_sourcing) - 여행 특화 멀티소스
+│   ├── [v] M2-1. The Guardian Travel API (guardian.py)
+│   ├── [v] M2-2. NewsAPI 여행 카테고리 (newsapi.py)
+│   ├── [v] M2-3. RSS 피드 수집 - 6개 매체 (rss_reader.py)
+│   ├── [v] M2-4. YouTube 트렌드 - 8개 국가 (youtube_trend.py)
+│   ├── [v] M2-5. 통합 서비스 (service.py)
+│   └── [v] M2-6. FastAPI 라우터 (api/sourcing.py)
 ├── [ ] [M3] 대본 작성 (script_writer)
 │   ├── [ ] M3-1. 소재 입력 -> 대본 생성 (OpenAI API)
 │   └── [ ] M3-2. 대본 템플릿 관리
@@ -73,10 +76,12 @@
   - 앱명: TubeFlow
   - 다크 테마, 좌측 사이드바 + 4탭 구조
   - references/01-design/ 에 전체 파일 저장 (HTML + 7개 JSX)
-- [v] M2 소재 수집 완료
-  - models.py (RedditPost, CollectConfig 데이터 모델)
-  - collector.py (PRAW 기반 Reddit 수집기)
-  - service.py (수집 + JSON/CSV 저장 서비스)
+- [v] M2 소재 수집 완료 (여행 특화 멀티소스로 전면 교체)
+  - Reddit API 접근 불가로 인해 4개 소스로 교체
+  - guardian.py (The Guardian Travel API - 5,000건/일)
+  - newsapi.py (NewsAPI 여행 카테고리 - 100건/일)
+  - rss_reader.py (Lonely Planet, NatGeo, BBC Travel 등 6개 매체)
+  - youtube_trend.py (8개 국가 여행 인기 급상승 영상)
   - api/sourcing.py (POST /api/v1/sourcing/collect)
 - [v] M1 공통 기반 완료
   - requirements.txt, .env.example (OpenAI 키 항목으로 업데이트)

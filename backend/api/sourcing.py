@@ -8,32 +8,45 @@ _service = ContentSourcingService()
 
 
 class CollectRequest(BaseModel):
-    subreddits: list[str] = Field(..., examples=[["r/AskReddit", "r/todayilearned"]])
-    time_filter: str = Field(default="week")
-    sort: str = Field(default="top")
-    limit: int = Field(default=50, ge=1, le=200)
-    min_score: int = Field(default=0, ge=0)
-    exclude_keywords: list[str] = Field(default_factory=list)
+    keywords: list[str] = Field(default=["travel", "tourism"], examples=[["travel", "tourism", "destination"]])
+    countries: list[str] = Field(default_factory=list)
+    language: str = Field(default="en")
+    limit: int = Field(default=20, ge=1, le=100)
+    sources: list[str] = Field(default=["guardian", "newsapi", "rss", "youtube"])
     save_format: str = Field(default="json")
 
 
 class CollectResponse(BaseModel):
     count: int
     saved_path: str
-    posts: list[dict]
+    articles: list[dict]
 
 
 @router.post("/collect", response_model=CollectResponse)
-async def collect_posts(req: CollectRequest):
-    if not req.subreddits:
-        raise HTTPException(status_code=400, detail="서브레딧을 하나 이상 입력해주세요.")
+async def collect_articles(req: CollectRequest):
+    valid_sources = {"guardian", "newsapi", "rss", "youtube"}
+    invalid = set(req.sources) - valid_sources
+    if invalid:
+        raise HTTPException(status_code=400, detail=f"유효하지 않은 소스: {invalid}")
+
     config = CollectConfig(
-        subreddits=req.subreddits,
-        time_filter=req.time_filter,
-        sort=req.sort,
+        keywords=req.keywords,
+        countries=req.countries,
+        language=req.language,
         limit=req.limit,
-        min_score=req.min_score,
-        exclude_keywords=req.exclude_keywords,
+        sources=req.sources,
     )
     result = _service.collect_and_save(config, fmt=req.save_format)
     return CollectResponse(**result)
+
+
+@router.get("/sources")
+async def get_available_sources():
+    return {
+        "sources": [
+            {"id": "guardian", "name": "The Guardian", "category": "뉴스", "limit": "5,000건/일"},
+            {"id": "newsapi",  "name": "NewsAPI",       "category": "뉴스", "limit": "100건/일"},
+            {"id": "rss",      "name": "RSS 피드",       "category": "미디어", "limit": "무제한"},
+            {"id": "youtube",  "name": "YouTube Trends", "category": "동영상", "limit": "10,000유닛/일"},
+        ]
+    }

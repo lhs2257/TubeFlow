@@ -17,10 +17,9 @@ class Settings(BaseSettings):
     app_port: int = Field(default=8421)
     log_level: str = Field(default="INFO")
 
-    # Reddit API
-    reddit_client_id: str = Field(default="")
-    reddit_client_secret: str = Field(default="")
-    reddit_user_agent: str = Field(default="TubeFlow/1.0")
+    # 소재 수집 API
+    guardian_api_key: str = Field(default="")
+    news_api_key: str = Field(default="")
 
     # OpenAI API
     openai_api_key: str = Field(default="")
