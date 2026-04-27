@@ -33,9 +33,11 @@ async def health_check():
     }
 
 
-# 라우터는 각 모듈 개발 완료 후 여기에 등록
-# from backend.api import sourcing, script, uploader, trend
-# app.include_router(sourcing.router, prefix="/api/v1")
+from backend.api import sourcing
+app.include_router(sourcing.router, prefix="/api/v1")
+
+# 개발 완료 후 순차 등록
+# from backend.api import script, uploader, trend
 # app.include_router(script.router,   prefix="/api/v1")
 # app.include_router(uploader.router, prefix="/api/v1")
 # app.include_router(trend.router,    prefix="/api/v1")

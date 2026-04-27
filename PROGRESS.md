@@ -4,7 +4,7 @@
 
 ## 현재 단계
 
-**[M2] 소재 수집 (content_sourcing)** - 대기중
+**[M3] 대본 작성 (script_writer)** - 대기중
 
 ---
 
@@ -23,10 +23,10 @@
 │   ├── [v] M1-3. API 인증 모듈 (shared/auth/ - Reddit, YouTube, Anthropic)
 │   ├── [v] M1-4. 공통 유틸리티 (shared/utils/ - 로거, 파일 처리)
 │   └── [v] M1-5. 백엔드 진입점 (backend/main.py)
-├── [ ] [M2] 소재 수집 (content_sourcing)
-│   ├── [ ] M2-1. Reddit 소재 수집기
-│   ├── [ ] M2-2. 소재 필터링 및 정리
-│   └── [ ] M2-3. 소재 저장/출력 (JSON, CSV)
+├── [v] [M2] 소재 수집 (content_sourcing)
+│   ├── [v] M2-1. Reddit 소재 수집기 (collector.py)
+│   ├── [v] M2-2. 소재 필터링 및 저장 (service.py, models.py)
+│   └── [v] M2-3. FastAPI 라우터 연동 (api/sourcing.py)
 ├── [ ] [M3] 대본 작성 (script_writer)
 │   ├── [ ] M3-1. 소재 입력 -> 대본 생성 (Claude API)
 │   └── [ ] M3-2. 대본 템플릿 관리
@@ -73,6 +73,11 @@
   - 앱명: TubeFlow
   - 다크 테마, 좌측 사이드바 + 4탭 구조
   - references/01-design/ 에 전체 파일 저장 (HTML + 7개 JSX)
+- [v] M2 소재 수집 완료
+  - models.py (RedditPost, CollectConfig 데이터 모델)
+  - collector.py (PRAW 기반 Reddit 수집기)
+  - service.py (수집 + JSON/CSV 저장 서비스)
+  - api/sourcing.py (POST /api/v1/sourcing/collect)
 - [v] M1 공통 기반 완료
   - requirements.txt, .env.example
   - shared/config/settings.py (pydantic-settings)
@@ -84,4 +89,4 @@
 
 ## 다음 할 일
 
-**[M2-1] Reddit 소재 수집기** (backend/core/content_sourcing/)
+**[M3-1] 대본 생성기** (backend/core/script_writer/) - Claude API 연동
