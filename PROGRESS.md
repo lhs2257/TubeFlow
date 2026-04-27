@@ -1,10 +1,10 @@
 # 작업 현황 (PROGRESS.md)
 
-> 최종 업데이트: 2026-04-27 (.env.example Guardian/NewsAPI 항목 반영)
+> 최종 업데이트: 2026-04-27 (M5 트렌드 분석 완료)
 
 ## 현재 단계
 
-**[M5] 트렌드 분석 (trend_analyzer)** - 대기중
+**[M6] 데스크톱 UI 통합 (desktop/)** - 대기중
 
 ---
 
@@ -41,10 +41,10 @@
 │   ├── [v] M4-2. YouTube 업로더 - 즉시/예약 (uploader.py)
 │   ├── [v] M4-3. 업로드 큐 스케줄러 (scheduler.py)
 │   └── [v] M4-4. FastAPI 라우터 (api/uploader.py)
-├── [ ] [M5] 트렌드 분석 (trend_analyzer)
-│   ├── [ ] M5-1. YouTube 트렌드 수집
-│   ├── [ ] M5-2. Google Trends 연동
-│   └── [ ] M5-3. 트렌드 리포트 생성
+├── [v] [M5] 트렌드 분석 (trend_analyzer)
+│   ├── [v] M5-1. YouTube 트렌드 수집 (youtube_trend.py)
+│   ├── [v] M5-2. Google Trends 연동 (google_trend.py)
+│   └── [v] M5-3. 트렌드 리포트 생성 (service.py + api/trend.py)
 ├── [ ] [M6] 데스크톱 UI 통합 (desktop/)
 │   ├── [ ] M6-1. 메인 윈도우 및 네비게이션
 │   ├── [ ] M6-2. 각 탭별 UI 구현
@@ -80,6 +80,13 @@
   - 앱명: TubeFlow
   - 다크 테마, 좌측 사이드바 + 4탭 구조
   - references/01-design/ 에 전체 파일 저장 (HTML + 7개 JSX)
+- [v] M5 트렌드 분석 완료
+  - models.py (TrendReport, TrendKeyword, YouTubeTrendItem, GoogleTrendItem)
+  - youtube_trend.py (조회수/좋아요/태그 포함 멀티 리전 수집 + 키워드 추출)
+  - google_trend.py (pytrends 기반 관심도 + 연관 키워드)
+  - service.py (YouTube 40% + Google 60% 가중 통합 점수, 리포트 JSON 저장)
+  - api/trend.py (POST /analyze, GET /report/latest, GET /keywords 등 5개 엔드포인트)
+  - backend/main.py에 trend 라우터 등록
 - [v] M4 업로드 예약 완료
   - models.py (UploadJob, VideoMetadata, PrivacyStatus, UploadStatus)
   - uploader.py (YouTube Data API 업로드, 썸네일 설정)
@@ -110,4 +117,4 @@
 
 ## 다음 할 일
 
-**[M5-1] YouTube 트렌드 수집** (backend/core/trend_analyzer/)
+**[M6-1] 메인 윈도우 및 네비게이션** (desktop/)
