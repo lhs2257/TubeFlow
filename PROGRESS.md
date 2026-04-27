@@ -1,6 +1,6 @@
 # 작업 현황 (PROGRESS.md)
 
-> 최종 업데이트: 2026-04-27
+> 최종 업데이트: 2026-04-27 (.env.example Guardian/NewsAPI 항목 반영)
 
 ## 현재 단계
 
