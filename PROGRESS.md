@@ -1,6 +1,6 @@
 # 작업 현황 (PROGRESS.md)
 
-> 최종 업데이트: 2026-04-27 (OpenAI 교체 반영)
+> 최종 업데이트: 2026-04-27 (환경변수 설정 중)
 
 ## 현재 단계
 
@@ -79,11 +79,12 @@
   - service.py (수집 + JSON/CSV 저장 서비스)
   - api/sourcing.py (POST /api/v1/sourcing/collect)
 - [v] M1 공통 기반 완료
-  - requirements.txt, .env.example
+  - requirements.txt, .env.example (OpenAI 키 항목으로 업데이트)
   - shared/config/settings.py (pydantic-settings)
   - shared/auth/ (Reddit, YouTube, OpenAI 인증) - Anthropic -> OpenAI 교체
   - shared/utils/ (로거, 파일 유틸)
   - backend/main.py (FastAPI 진입점)
+  - [>] .env 실제 API 키 입력 중 (Reddit, OpenAI, YouTube)
 
 ---
 
