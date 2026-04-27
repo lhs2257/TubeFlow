@@ -1,6 +1,6 @@
 # 작업 현황 (PROGRESS.md)
 
-> 최종 업데이트: 2026-04-27
+> 최종 업데이트: 2026-04-27 (OpenAI 교체 반영)
 
 ## 현재 단계
 
@@ -20,7 +20,7 @@
 ├── [v] [M1] 공통 기반 (shared/)
 │   ├── [v] M1-1. 프로젝트 환경 설정 (.env.example, requirements.txt)
 │   ├── [v] M1-2. 설정 관리 모듈 (shared/config/settings.py)
-│   ├── [v] M1-3. API 인증 모듈 (shared/auth/ - Reddit, YouTube, Anthropic)
+│   ├── [v] M1-3. API 인증 모듈 (shared/auth/ - Reddit, YouTube, OpenAI)
 │   ├── [v] M1-4. 공통 유틸리티 (shared/utils/ - 로거, 파일 처리)
 │   └── [v] M1-5. 백엔드 진입점 (backend/main.py)
 ├── [v] [M2] 소재 수집 (content_sourcing)
@@ -28,7 +28,7 @@
 │   ├── [v] M2-2. 소재 필터링 및 저장 (service.py, models.py)
 │   └── [v] M2-3. FastAPI 라우터 연동 (api/sourcing.py)
 ├── [ ] [M3] 대본 작성 (script_writer)
-│   ├── [ ] M3-1. 소재 입력 -> 대본 생성 (Claude API)
+│   ├── [ ] M3-1. 소재 입력 -> 대본 생성 (OpenAI API)
 │   └── [ ] M3-2. 대본 템플릿 관리
 ├── [ ] [M4] 업로드 예약 (uploader)
 │   ├── [ ] M4-1. 영상 메타데이터 설정
@@ -81,7 +81,7 @@
 - [v] M1 공통 기반 완료
   - requirements.txt, .env.example
   - shared/config/settings.py (pydantic-settings)
-  - shared/auth/ (Reddit, YouTube, Anthropic 인증)
+  - shared/auth/ (Reddit, YouTube, OpenAI 인증) - Anthropic -> OpenAI 교체
   - shared/utils/ (로거, 파일 유틸)
   - backend/main.py (FastAPI 진입점)
 
@@ -89,4 +89,4 @@
 
 ## 다음 할 일
 
-**[M3-1] 대본 생성기** (backend/core/script_writer/) - Claude API 연동
+**[M3-1] 대본 생성기** (backend/core/script_writer/) - OpenAI API 연동
