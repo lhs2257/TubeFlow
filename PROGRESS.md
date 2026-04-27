@@ -4,7 +4,7 @@
 
 ## 현재 단계
 
-**[M4] 업로드 예약 (uploader)** - 대기중
+**[M5] 트렌드 분석 (trend_analyzer)** - 대기중
 
 ---
 
@@ -36,10 +36,11 @@
 │   ├── [v] M3-3. 프롬프트 템플릿 - 4가지 어조 (templates.py)
 │   ├── [v] M3-4. 서비스 레이어 (service.py)
 │   └── [v] M3-5. FastAPI 라우터 (api/script.py)
-├── [ ] [M4] 업로드 예약 (uploader)
-│   ├── [ ] M4-1. 영상 메타데이터 설정
-│   ├── [ ] M4-2. 유튜브 업로드 자동화
-│   └── [ ] M4-3. 예약 업로드 스케줄러
+├── [v] [M4] 업로드 예약 (uploader)
+│   ├── [v] M4-1. 데이터 모델 (models.py)
+│   ├── [v] M4-2. YouTube 업로더 - 즉시/예약 (uploader.py)
+│   ├── [v] M4-3. 업로드 큐 스케줄러 (scheduler.py)
+│   └── [v] M4-4. FastAPI 라우터 (api/uploader.py)
 ├── [ ] [M5] 트렌드 분석 (trend_analyzer)
 │   ├── [ ] M5-1. YouTube 트렌드 수집
 │   ├── [ ] M5-2. Google Trends 연동
@@ -79,6 +80,11 @@
   - 앱명: TubeFlow
   - 다크 테마, 좌측 사이드바 + 4탭 구조
   - references/01-design/ 에 전체 파일 저장 (HTML + 7개 JSX)
+- [v] M4 업로드 예약 완료
+  - models.py (UploadJob, VideoMetadata, PrivacyStatus, UploadStatus)
+  - uploader.py (YouTube Data API 업로드, 썸네일 설정)
+  - scheduler.py (업로드 큐 관리, 예약 실행, 큐 영속화)
+  - api/uploader.py (POST /add, POST /run, GET /queue, DELETE /cancel)
 - [v] M3 대본 작성 완료
   - models.py (Script, ScriptRequest 데이터 모델)
   - templates.py (4가지 어조 프롬프트 - 정보/스토리/유머/드라마)
@@ -104,4 +110,4 @@
 
 ## 다음 할 일
 
-**[M4-1] 영상 메타데이터 설정** (backend/core/uploader/)
+**[M5-1] YouTube 트렌드 수집** (backend/core/trend_analyzer/)
