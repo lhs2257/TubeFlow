@@ -1,10 +1,10 @@
 # 작업 현황 (PROGRESS.md)
 
-> 최종 업데이트: 2026-04-27 (M5 트렌드 분석 완료)
+> 최종 업데이트: 2026-04-27 (M6 데스크톱 UI 통합 완료)
 
 ## 현재 단계
 
-**[M6] 데스크톱 UI 통합 (desktop/)** - 대기중
+**[M7] 패키징 및 배포 (deploy/)** - 대기중
 
 ---
 
@@ -45,10 +45,10 @@
 │   ├── [v] M5-1. YouTube 트렌드 수집 (youtube_trend.py)
 │   ├── [v] M5-2. Google Trends 연동 (google_trend.py)
 │   └── [v] M5-3. 트렌드 리포트 생성 (service.py + api/trend.py)
-├── [ ] [M6] 데스크톱 UI 통합 (desktop/)
-│   ├── [ ] M6-1. 메인 윈도우 및 네비게이션
-│   ├── [ ] M6-2. 각 탭별 UI 구현
-│   └── [ ] M6-3. 백엔드 연동 테스트
+├── [v] [M6] 데스크톱 UI 통합 (desktop/)
+│   ├── [v] M6-1. 메인 윈도우 및 네비게이션 (main_window.py)
+│   ├── [v] M6-2. 각 탭별 UI 구현 (tab_sourcing / tab_script / tab_uploader / tab_trend)
+│   └── [v] M6-3. 백엔드 연동 API 클라이언트 (client/api_client.py)
 └── [ ] [M7] 패키징 및 배포 (deploy/)
     ├── [ ] M7-1. PyInstaller .exe 빌드
     ├── [ ] M7-2. Docker 컨테이너화
@@ -80,6 +80,14 @@
   - 앱명: TubeFlow
   - 다크 테마, 좌측 사이드바 + 4탭 구조
   - references/01-design/ 에 전체 파일 저장 (HTML + 7개 JSX)
+- [v] M6 데스크톱 UI 통합 완료
+  - client/api_client.py (APIClient - 모든 백엔드 API 비동기 래핑)
+  - ui/main_window.py (TubeFlowApp - 사이드바 + 4탭 + 서버 모드 전환)
+  - ui/tab_sourcing.py (소재 수집 탭 - 멀티소스 수집 + 결과 목록)
+  - ui/tab_script.py (대본 작성 탭 - 어조/길이 선택 + 에디터)
+  - ui/tab_uploader.py (업로드 예약 탭 - 폼 + 큐 패널)
+  - ui/tab_trend.py (트렌드 분석 탭 - 키워드 순위 + 통계 카드)
+  - run_app.py (앱 진입점)
 - [v] M5 트렌드 분석 완료
   - models.py (TrendReport, TrendKeyword, YouTubeTrendItem, GoogleTrendItem)
   - youtube_trend.py (조회수/좋아요/태그 포함 멀티 리전 수집 + 키워드 추출)
@@ -117,4 +125,4 @@
 
 ## 다음 할 일
 
-**[M6-1] 메인 윈도우 및 네비게이션** (desktop/)
+**[M7-1] PyInstaller .exe 빌드** (deploy/)
