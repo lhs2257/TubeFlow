@@ -2,6 +2,7 @@ import tkinter as tk
 from datetime import datetime
 
 import customtkinter as ctk
+from desktop.ui.fonts import F
 
 from desktop.client import APIClient
 
@@ -40,13 +41,13 @@ class SourcingTab(ctk.CTkFrame):
 
         ctk.CTkLabel(hdr, text="소재 수집",
                      text_color=self.C["text"],
-                     font=ctk.CTkFont(size=16, weight="bold")).grid(
+                     font=F(size=16, weight="bold")).grid(
             row=0, column=0, padx=24, pady=16, sticky="w")
 
         ctk.CTkLabel(hdr,
                      text="Guardian · NewsAPI · RSS · YouTube 에서 여행 콘텐츠 소재를 수집합니다",
                      text_color=self.C["dim"],
-                     font=ctk.CTkFont(size=12)).grid(
+                     font=F(size=12)).grid(
             row=0, column=1, padx=8, pady=16, sticky="w")
 
     # ── 바디 (좌: 설정 / 우: 결과) ──────────────────────────────
@@ -70,11 +71,11 @@ class SourcingTab(ctk.CTkFrame):
 
         # 키워드
         ctk.CTkLabel(left, text="키워드", text_color=self.C["dim"],
-                     font=ctk.CTkFont(size=11, weight="bold")).grid(
+                     font=F(size=11, weight="bold")).grid(
             row=0, column=0, sticky="w", padx=20, pady=(20, 2))
         self._kw_entry = ctk.CTkTextbox(
             left, height=72, fg_color=self.C["panel2"],
-            text_color=self.C["text"], font=ctk.CTkFont(size=12),
+            text_color=self.C["text"], font=F(size=12),
             border_width=1, border_color=self.C["border"],
         )
         self._kw_entry.insert("1.0", "travel, tourism, vacation")
@@ -82,7 +83,7 @@ class SourcingTab(ctk.CTkFrame):
 
         # 소스 선택
         ctk.CTkLabel(left, text="수집 소스", text_color=self.C["dim"],
-                     font=ctk.CTkFont(size=11, weight="bold")).grid(
+                     font=F(size=11, weight="bold")).grid(
             row=2, column=0, sticky="w", padx=20, pady=(12, 2))
 
         src_frame = ctk.CTkFrame(left, fg_color="transparent")
@@ -94,7 +95,7 @@ class SourcingTab(ctk.CTkFrame):
             self._source_vars[src_id] = var
             cb = ctk.CTkCheckBox(
                 src_frame, text=label, variable=var,
-                text_color=self.C["text"], font=ctk.CTkFont(size=12),
+                text_color=self.C["text"], font=F(size=12),
                 fg_color=self.C["accent"], hover_color="#FF6B78",
                 checkmark_color="#ffffff",
             )
@@ -102,7 +103,7 @@ class SourcingTab(ctk.CTkFrame):
 
         # 수집 개수
         ctk.CTkLabel(left, text="소스당 최대 수집", text_color=self.C["dim"],
-                     font=ctk.CTkFont(size=11, weight="bold")).grid(
+                     font=F(size=11, weight="bold")).grid(
             row=4, column=0, sticky="w", padx=20, pady=(12, 2))
 
         limit_frame = ctk.CTkFrame(left, fg_color="transparent")
@@ -112,7 +113,7 @@ class SourcingTab(ctk.CTkFrame):
         self._limit_var = tk.IntVar(value=20)
         self._limit_label = ctk.CTkLabel(limit_frame, text="20개",
                                           text_color=self.C["text"],
-                                          font=ctk.CTkFont(size=12))
+                                          font=F(size=12))
         self._limit_label.grid(row=0, column=1, padx=(8, 0))
 
         slider = ctk.CTkSlider(
@@ -133,7 +134,7 @@ class SourcingTab(ctk.CTkFrame):
             command=self._run_collect,
             height=40,
             fg_color=self.C["accent"], hover_color="#FF6B78",
-            font=ctk.CTkFont(size=14, weight="bold"),
+            font=F(size=14, weight="bold"),
         )
         self._collect_btn.grid(row=7, column=0, sticky="ew", padx=20, pady=(8, 4))
 
@@ -143,7 +144,7 @@ class SourcingTab(ctk.CTkFrame):
         self._progress_bar.grid(row=8, column=0, sticky="ew", padx=20, pady=(0, 16))
 
         self._status_lbl = ctk.CTkLabel(left, text="", text_color=self.C["dim"],
-                                         font=ctk.CTkFont(size=11))
+                                         font=F(size=11))
         self._status_lbl.grid(row=9, column=0, padx=20, pady=(0, 16))
 
     def _build_right_panel(self, parent) -> None:
@@ -160,7 +161,7 @@ class SourcingTab(ctk.CTkFrame):
 
         self._count_label = ctk.CTkLabel(toolbar, text="수집된 소재 0개",
                                           text_color=self.C["text"],
-                                          font=ctk.CTkFont(size=13, weight="bold"))
+                                          font=F(size=13, weight="bold"))
         self._count_label.grid(row=0, column=0, padx=20, pady=10, sticky="w")
 
         btn_frame = ctk.CTkFrame(toolbar, fg_color="transparent")
@@ -171,7 +172,7 @@ class SourcingTab(ctk.CTkFrame):
             command=self._send_to_script,
             height=30, width=130,
             fg_color=self.C["accent"], hover_color="#FF6B78",
-            font=ctk.CTkFont(size=12, weight="bold"),
+            font=F(size=12, weight="bold"),
             state="disabled",
         )
         self._send_btn.grid(row=0, column=0, padx=(0, 4))
@@ -278,20 +279,20 @@ class SourcingTab(ctk.CTkFrame):
         src_color = next((v for k, v in src_colors.items() if k.lower() in source.lower()), self.C["dim"])
 
         ctk.CTkLabel(row, text=source[:18], text_color=src_color,
-                     font=ctk.CTkFont(size=10, weight="bold")).grid(
+                     font=F(size=10, weight="bold")).grid(
             row=0, column=1, sticky="w", padx=4, pady=(10, 0))
 
         # 제목
         title = art.get("title", "(제목 없음)")[:120]
         ctk.CTkLabel(row, text=title, text_color=self.C["text"],
-                     font=ctk.CTkFont(size=12),
+                     font=F(size=12),
                      wraplength=500, anchor="w", justify="left").grid(
             row=1, column=1, sticky="ew", padx=4, pady=(0, 8))
 
         # 날짜
         pub = art.get("published_at", "")[:10]
         ctk.CTkLabel(row, text=pub, text_color=self.C["mute"],
-                     font=ctk.CTkFont(size=10)).grid(
+                     font=F(size=10)).grid(
             row=0, column=2, padx=12, pady=(10, 0), sticky="e")
 
     def _toggle(self, idx: int, val: bool) -> None:

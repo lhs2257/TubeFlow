@@ -1,6 +1,7 @@
 import tkinter as tk
 
 import customtkinter as ctk
+from desktop.ui.fonts import F
 
 from desktop.client import APIClient
 
@@ -46,18 +47,18 @@ class ScriptTab(ctk.CTkFrame):
 
         ctk.CTkLabel(hdr, text="대본 작성",
                      text_color=self.C["text"],
-                     font=ctk.CTkFont(size=16, weight="bold")).grid(
+                     font=F(size=16, weight="bold")).grid(
             row=0, column=0, padx=24, pady=16, sticky="w")
 
         ctk.CTkLabel(hdr, text="수집된 소재를 AI로 영상 대본으로 변환합니다",
                      text_color=self.C["dim"],
-                     font=ctk.CTkFont(size=12)).grid(
+                     font=F(size=12)).grid(
             row=0, column=1, padx=8, pady=16, sticky="w")
 
         self._save_btn = ctk.CTkButton(
             hdr, text="저장", width=80, height=32,
             fg_color=self.C["panel2"], hover_color=self.C["panel3"],
-            text_color=self.C["text"], font=ctk.CTkFont(size=12),
+            text_color=self.C["text"], font=F(size=12),
             command=self._save_script,
         )
         self._save_btn.grid(row=0, column=2, padx=12, pady=12)
@@ -81,22 +82,22 @@ class ScriptTab(ctk.CTkFrame):
 
         # 소재 제목
         ctk.CTkLabel(left, text="소재 제목", text_color=self.C["dim"],
-                     font=ctk.CTkFont(size=11, weight="bold")).grid(
+                     font=F(size=11, weight="bold")).grid(
             row=0, column=0, sticky="w", padx=20, pady=(20, 2))
         self._title_entry = ctk.CTkEntry(
             left, placeholder_text="소재 제목을 입력하세요",
             fg_color=self.C["panel2"], text_color=self.C["text"],
-            border_color=self.C["border"], font=ctk.CTkFont(size=12),
+            border_color=self.C["border"], font=F(size=12),
         )
         self._title_entry.grid(row=1, column=0, sticky="ew", padx=20, pady=4)
 
         # 소재 내용
         ctk.CTkLabel(left, text="소재 내용", text_color=self.C["dim"],
-                     font=ctk.CTkFont(size=11, weight="bold")).grid(
+                     font=F(size=11, weight="bold")).grid(
             row=2, column=0, sticky="w", padx=20, pady=(12, 2))
         self._body_entry = ctk.CTkTextbox(
             left, height=100, fg_color=self.C["panel2"],
-            text_color=self.C["text"], font=ctk.CTkFont(size=12),
+            text_color=self.C["text"], font=F(size=12),
             border_width=1, border_color=self.C["border"],
         )
         self._body_entry.insert("1.0", "")
@@ -104,12 +105,12 @@ class ScriptTab(ctk.CTkFrame):
 
         # URL
         ctk.CTkLabel(left, text="소재 URL (선택)", text_color=self.C["dim"],
-                     font=ctk.CTkFont(size=11, weight="bold")).grid(
+                     font=F(size=11, weight="bold")).grid(
             row=4, column=0, sticky="w", padx=20, pady=(8, 2))
         self._url_entry = ctk.CTkEntry(
             left, placeholder_text="https://...",
             fg_color=self.C["panel2"], text_color=self.C["text"],
-            border_color=self.C["border"], font=ctk.CTkFont(size=11),
+            border_color=self.C["border"], font=F(size=11),
         )
         self._url_entry.grid(row=5, column=0, sticky="ew", padx=20, pady=4)
 
@@ -119,7 +120,7 @@ class ScriptTab(ctk.CTkFrame):
 
         # 어조 선택
         ctk.CTkLabel(left, text="어조 / 스타일", text_color=self.C["dim"],
-                     font=ctk.CTkFont(size=11, weight="bold")).grid(
+                     font=F(size=11, weight="bold")).grid(
             row=7, column=0, sticky="w", padx=20, pady=(0, 6))
 
         tone_frame = ctk.CTkFrame(left, fg_color="transparent")
@@ -135,7 +136,7 @@ class ScriptTab(ctk.CTkFrame):
                 fg_color=self.C["panel2"] if tid != self._tone else self.C["panel3"],
                 border_color=self.C["accent"] if tid == self._tone else self.C["border"],
                 border_width=1,
-                text_color=self.C["text"], font=ctk.CTkFont(size=11),
+                text_color=self.C["text"], font=F(size=11),
                 hover_color=self.C["panel3"],
             )
             btn.grid(row=i // 2, column=i % 2, padx=3, pady=3, sticky="ew")
@@ -143,7 +144,7 @@ class ScriptTab(ctk.CTkFrame):
 
         # 영상 길이
         ctk.CTkLabel(left, text="목표 길이", text_color=self.C["dim"],
-                     font=ctk.CTkFont(size=11, weight="bold")).grid(
+                     font=F(size=11, weight="bold")).grid(
             row=9, column=0, sticky="w", padx=20, pady=(12, 6))
 
         dur_frame = ctk.CTkFrame(left, fg_color="transparent")
@@ -159,7 +160,7 @@ class ScriptTab(ctk.CTkFrame):
                 fg_color=self.C["panel2"] if dur_id != self._duration else self.C["panel3"],
                 border_color=self.C["accent"] if dur_id == self._duration else self.C["border"],
                 border_width=1,
-                text_color=self.C["text"], font=ctk.CTkFont(size=11),
+                text_color=self.C["text"], font=F(size=11),
                 hover_color=self.C["panel3"],
             )
             btn.grid(row=0, column=i, padx=2)
@@ -174,7 +175,7 @@ class ScriptTab(ctk.CTkFrame):
             command=self._generate,
             height=40,
             fg_color=self.C["accent"], hover_color="#FF6B78",
-            font=ctk.CTkFont(size=14, weight="bold"),
+            font=F(size=14, weight="bold"),
         )
         self._gen_btn.grid(row=12, column=0, sticky="ew", padx=20, pady=(8, 4))
 
@@ -184,7 +185,7 @@ class ScriptTab(ctk.CTkFrame):
         self._progress.grid(row=13, column=0, sticky="ew", padx=20, pady=(0, 8))
 
         self._status = ctk.CTkLabel(left, text="", text_color=self.C["dim"],
-                                     font=ctk.CTkFont(size=11))
+                                     font=F(size=11))
         self._status.grid(row=14, column=0, padx=20, pady=(0, 16))
 
     def _build_right_panel(self, parent) -> None:
@@ -201,7 +202,7 @@ class ScriptTab(ctk.CTkFrame):
 
         self._script_info = ctk.CTkLabel(toolbar, text="대본 미생성",
                                           text_color=self.C["dim"],
-                                          font=ctk.CTkFont(size=12))
+                                          font=F(size=12))
         self._script_info.grid(row=0, column=0, padx=20, pady=10, sticky="w")
 
         self._send_upload_btn = ctk.CTkButton(
@@ -209,7 +210,7 @@ class ScriptTab(ctk.CTkFrame):
             command=self._send_to_upload,
             height=30, width=120, state="disabled",
             fg_color=self.C["panel2"], hover_color=self.C["panel3"],
-            text_color=self.C["text"], font=ctk.CTkFont(size=12),
+            text_color=self.C["text"], font=F(size=12),
         )
         self._send_upload_btn.grid(row=0, column=2, padx=12, pady=6)
 
@@ -218,7 +219,7 @@ class ScriptTab(ctk.CTkFrame):
             right,
             fg_color=self.C["panel"],
             text_color=self.C["text"],
-            font=ctk.CTkFont(family="Courier New", size=13),
+            font=F(mono=True, size=13),
             wrap="word",
             border_width=0,
         )
@@ -231,7 +232,7 @@ class ScriptTab(ctk.CTkFrame):
 
         self._char_label = ctk.CTkLabel(status_bar, text="0자 · 약 0분",
                                          text_color=self.C["mute"],
-                                         font=ctk.CTkFont(size=10))
+                                         font=F(size=10))
         self._char_label.grid(row=0, column=0, padx=16, pady=4, sticky="w")
 
         self._editor.bind("<KeyRelease>", self._update_char_count)

@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from tkinter import filedialog
 
 import customtkinter as ctk
+from desktop.ui.fonts import F
 
 from desktop.client import APIClient
 
@@ -58,17 +59,17 @@ class UploaderTab(ctk.CTkFrame):
 
         ctk.CTkLabel(hdr, text="업로드 예약",
                      text_color=self.C["text"],
-                     font=ctk.CTkFont(size=16, weight="bold")).grid(
+                     font=F(size=16, weight="bold")).grid(
             row=0, column=0, padx=24, pady=16, sticky="w")
         ctk.CTkLabel(hdr, text="영상을 업로드하고 게시 일정을 관리합니다",
-                     text_color=self.C["dim"], font=ctk.CTkFont(size=12)).grid(
+                     text_color=self.C["dim"], font=F(size=12)).grid(
             row=0, column=1, padx=8, pady=16, sticky="w")
 
         ctk.CTkButton(
             hdr, text="큐 새로고침", command=self._refresh_queue,
             height=32, width=110,
             fg_color=self.C["panel2"], hover_color=self.C["panel3"],
-            text_color=self.C["text"], font=ctk.CTkFont(size=12),
+            text_color=self.C["text"], font=F(size=12),
         ).grid(row=0, column=2, padx=12, pady=12)
 
     # ── 바디 ─────────────────────────────────────────────────────
@@ -101,12 +102,12 @@ class UploaderTab(ctk.CTkFrame):
 
         self._video_label = ctk.CTkLabel(video_row, text="파일을 선택하세요",
                                           text_color=self.C["dim"],
-                                          font=ctk.CTkFont(size=12), anchor="w")
+                                          font=F(size=12), anchor="w")
         self._video_label.grid(row=0, column=0, padx=12, pady=10, sticky="ew")
 
         ctk.CTkButton(video_row, text="찾아보기", width=90, height=28,
                       fg_color=self.C["panel3"], hover_color=self.C["border"],
-                      text_color=self.C["text"], font=ctk.CTkFont(size=11),
+                      text_color=self.C["text"], font=F(size=11),
                       command=self._pick_video).grid(row=0, column=1, padx=8, pady=8)
 
         # 제목
@@ -115,7 +116,7 @@ class UploaderTab(ctk.CTkFrame):
                                           fg_color=self.C["panel2"],
                                           text_color=self.C["text"],
                                           border_color=self.C["border"],
-                                          font=ctk.CTkFont(size=13))
+                                          font=F(size=13))
         self._title_entry.grid(row=3, column=0, sticky="ew", **pad)
 
         # 설명
@@ -123,7 +124,7 @@ class UploaderTab(ctk.CTkFrame):
         self._desc_box = ctk.CTkTextbox(form, height=90, fg_color=self.C["panel2"],
                                          text_color=self.C["text"],
                                          border_width=1, border_color=self.C["border"],
-                                         font=ctk.CTkFont(size=12))
+                                         font=F(size=12))
         self._desc_box.grid(row=5, column=0, sticky="ew", **pad)
 
         # 태그
@@ -132,7 +133,7 @@ class UploaderTab(ctk.CTkFrame):
                                         fg_color=self.C["panel2"],
                                         text_color=self.C["text"],
                                         border_color=self.C["border"],
-                                        font=ctk.CTkFont(size=12))
+                                        font=F(size=12))
         self._tag_entry.grid(row=7, column=0, sticky="ew", **pad)
 
         # 공개 범위
@@ -146,7 +147,7 @@ class UploaderTab(ctk.CTkFrame):
                 priv_frame, text=label, value=val,
                 variable=self._priv_var,
                 fg_color=self.C["accent"], hover_color="#FF6B78",
-                text_color=self.C["text"], font=ctk.CTkFont(size=12),
+                text_color=self.C["text"], font=F(size=12),
             )
             rb.grid(row=0, column=i, padx=(0, 16))
 
@@ -159,7 +160,7 @@ class UploaderTab(ctk.CTkFrame):
 
         ctk.CTkLabel(sched_card, text="예약 게시 (비워두면 즉시)",
                      text_color=self.C["text"],
-                     font=ctk.CTkFont(size=12, weight="bold")).grid(
+                     font=F(size=12, weight="bold")).grid(
             row=0, column=0, columnspan=3, sticky="w", padx=14, pady=(10, 4))
 
         tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
@@ -167,19 +168,19 @@ class UploaderTab(ctk.CTkFrame):
                                          fg_color=self.C["panel3"],
                                          text_color=self.C["text"],
                                          border_color=self.C["border"],
-                                         font=ctk.CTkFont(size=12))
+                                         font=F(size=12))
         self._date_entry.grid(row=1, column=0, sticky="ew", padx=8, pady=(0, 10))
 
         self._time_entry = ctk.CTkEntry(sched_card, placeholder_text="19:00",
                                          fg_color=self.C["panel3"],
                                          text_color=self.C["text"],
                                          border_color=self.C["border"],
-                                         font=ctk.CTkFont(size=12))
+                                         font=F(size=12))
         self._time_entry.grid(row=1, column=1, sticky="ew", padx=4, pady=(0, 10))
 
         ctk.CTkLabel(sched_card, text="로컬 시간 기준",
                      text_color=self.C["mute"],
-                     font=ctk.CTkFont(size=11)).grid(
+                     font=F(size=11)).grid(
             row=1, column=2, padx=8, pady=(0, 10))
 
         # 등록 버튼
@@ -188,12 +189,12 @@ class UploaderTab(ctk.CTkFrame):
             command=self._submit,
             height=40,
             fg_color=self.C["accent"], hover_color="#FF6B78",
-            font=ctk.CTkFont(size=14, weight="bold"),
+            font=F(size=14, weight="bold"),
         )
         self._submit_btn.grid(row=11, column=0, sticky="ew", padx=24, pady=(12, 4))
 
         self._form_status = ctk.CTkLabel(form, text="", text_color=self.C["dim"],
-                                          font=ctk.CTkFont(size=11))
+                                          font=F(size=11))
         self._form_status.grid(row=12, column=0, pady=(0, 16))
 
     def _build_queue_panel(self, parent) -> None:
@@ -211,13 +212,13 @@ class UploaderTab(ctk.CTkFrame):
 
         self._queue_title = ctk.CTkLabel(q_hdr, text="예약 큐 (0개)",
                                           text_color=self.C["text"],
-                                          font=ctk.CTkFont(size=13, weight="bold"))
+                                          font=F(size=13, weight="bold"))
         self._queue_title.grid(row=0, column=0, padx=16, pady=10, sticky="w")
 
         ctk.CTkButton(q_hdr, text="실행", command=self._run_pending,
                       height=28, width=60,
                       fg_color=self.C["accent"], hover_color="#FF6B78",
-                      text_color="#fff", font=ctk.CTkFont(size=11, weight="bold")).grid(
+                      text_color="#fff", font=F(size=11, weight="bold")).grid(
             row=0, column=2, padx=10, pady=8)
 
         # 큐 목록
@@ -232,7 +233,7 @@ class UploaderTab(ctk.CTkFrame):
 
     def _section_label(self, parent, text: str, row: int) -> None:
         ctk.CTkLabel(parent, text=text, text_color=self.C["dim"],
-                     font=ctk.CTkFont(size=11, weight="bold")).grid(
+                     font=F(size=11, weight="bold")).grid(
             row=row, column=0, sticky="w", padx=24, pady=(12, 2))
 
     # ── 동작 ─────────────────────────────────────────────────────
@@ -322,7 +323,7 @@ class UploaderTab(ctk.CTkFrame):
         if not queue:
             ctk.CTkLabel(self._queue_scroll, text="예약된 항목이 없습니다.",
                          text_color=self.C["mute"],
-                         font=ctk.CTkFont(size=12)).grid(row=0, column=0, pady=24)
+                         font=F(size=12)).grid(row=0, column=0, pady=24)
             return
 
         for i, job in enumerate(queue):
@@ -341,7 +342,7 @@ class UploaderTab(ctk.CTkFrame):
 
         ctk.CTkLabel(card, text=job.get("title", "")[:50],
                      text_color=self.C["text"],
-                     font=ctk.CTkFont(size=12),
+                     font=F(size=12),
                      wraplength=280, anchor="w", justify="left").grid(
             row=0, column=0, sticky="ew", padx=10, pady=(8, 2))
 
@@ -349,20 +350,20 @@ class UploaderTab(ctk.CTkFrame):
         info_frame.grid(row=1, column=0, columnspan=2, sticky="ew", padx=10, pady=(0, 8))
 
         ctk.CTkLabel(info_frame, text=label, text_color=color,
-                     font=ctk.CTkFont(size=10, weight="bold")).grid(
+                     font=F(size=10, weight="bold")).grid(
             row=0, column=0, sticky="w")
 
         sched = job.get("scheduled_at") or "즉시"
         if sched and sched != "즉시":
             sched = sched[:16].replace("T", " ")
         ctk.CTkLabel(info_frame, text=sched, text_color=self.C["mute"],
-                     font=ctk.CTkFont(size=10)).grid(row=0, column=1, padx=8, sticky="w")
+                     font=F(size=10)).grid(row=0, column=1, padx=8, sticky="w")
 
         if status == "pending":
             ctk.CTkButton(
                 card, text="취소", width=48, height=22,
                 fg_color="transparent", hover_color=self.C["panel3"],
-                text_color=self.C["accent"], font=ctk.CTkFont(size=10),
+                text_color=self.C["accent"], font=F(size=10),
                 border_width=1, border_color=self.C["accent"],
                 command=lambda jid=job.get("id", ""): self._cancel_job(jid),
             ).grid(row=0, column=1, padx=8, pady=(8, 2))

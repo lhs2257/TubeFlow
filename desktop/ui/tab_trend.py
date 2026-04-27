@@ -1,6 +1,7 @@
 import tkinter as tk
 
 import customtkinter as ctk
+from desktop.ui.fonts import F
 
 from desktop.client import APIClient
 
@@ -51,10 +52,10 @@ class TrendTab(ctk.CTkFrame):
 
         ctk.CTkLabel(hdr, text="트렌드 분석",
                      text_color=self.C["text"],
-                     font=ctk.CTkFont(size=16, weight="bold")).grid(
+                     font=F(size=16, weight="bold")).grid(
             row=0, column=0, padx=24, pady=16, sticky="w")
         ctk.CTkLabel(hdr, text="YouTube · Google Trends 데이터로 콘텐츠 기회를 발굴합니다",
-                     text_color=self.C["dim"], font=ctk.CTkFont(size=12)).grid(
+                     text_color=self.C["dim"], font=F(size=12)).grid(
             row=0, column=1, padx=8, pady=16, sticky="w")
 
     # ── 바디 ─────────────────────────────────────────────────────
@@ -76,7 +77,7 @@ class TrendTab(ctk.CTkFrame):
 
         # 분석 국가
         ctk.CTkLabel(left, text="분석 국가", text_color=self.C["dim"],
-                     font=ctk.CTkFont(size=11, weight="bold")).grid(
+                     font=F(size=11, weight="bold")).grid(
             row=0, column=0, sticky="w", padx=20, pady=(20, 6))
 
         region_frame = ctk.CTkFrame(left, fg_color="transparent")
@@ -88,7 +89,7 @@ class TrendTab(ctk.CTkFrame):
             self._region_vars[code] = var
             cb = ctk.CTkCheckBox(
                 region_frame, text=f"{code} {name}", variable=var,
-                text_color=self.C["text"], font=ctk.CTkFont(size=11),
+                text_color=self.C["text"], font=F(size=11),
                 fg_color=self.C["accent"], hover_color="#FF6B78",
                 checkmark_color="#ffffff",
             )
@@ -96,7 +97,7 @@ class TrendTab(ctk.CTkFrame):
 
         # 기간
         ctk.CTkLabel(left, text="분석 기간", text_color=self.C["dim"],
-                     font=ctk.CTkFont(size=11, weight="bold")).grid(
+                     font=F(size=11, weight="bold")).grid(
             row=2, column=0, sticky="w", padx=20, pady=(16, 6))
 
         tf_frame = ctk.CTkFrame(left, fg_color="transparent")
@@ -111,7 +112,7 @@ class TrendTab(ctk.CTkFrame):
                 fg_color=self.C["panel3"] if tf_id == self._timeframe else self.C["panel2"],
                 border_color=self.C["accent"] if tf_id == self._timeframe else self.C["border"],
                 border_width=1,
-                text_color=self.C["text"], font=ctk.CTkFont(size=11),
+                text_color=self.C["text"], font=F(size=11),
                 hover_color=self.C["panel3"],
             )
             btn.grid(row=i // 2, column=i % 2, padx=2, pady=2, sticky="ew")
@@ -119,7 +120,7 @@ class TrendTab(ctk.CTkFrame):
 
         # 소스당 수집 수
         ctk.CTkLabel(left, text="국가당 수집 수", text_color=self.C["dim"],
-                     font=ctk.CTkFont(size=11, weight="bold")).grid(
+                     font=F(size=11, weight="bold")).grid(
             row=4, column=0, sticky="w", padx=20, pady=(16, 4))
 
         limit_row = ctk.CTkFrame(left, fg_color="transparent")
@@ -129,7 +130,7 @@ class TrendTab(ctk.CTkFrame):
         self._yt_limit = tk.IntVar(value=10)
         self._yt_limit_lbl = ctk.CTkLabel(limit_row, text="10개",
                                             text_color=self.C["text"],
-                                            font=ctk.CTkFont(size=12))
+                                            font=F(size=12))
         self._yt_limit_lbl.grid(row=0, column=1, padx=(6, 0))
 
         ctk.CTkSlider(
@@ -148,7 +149,7 @@ class TrendTab(ctk.CTkFrame):
             command=self._run_analyze,
             height=40,
             fg_color=self.C["accent"], hover_color="#FF6B78",
-            font=ctk.CTkFont(size=14, weight="bold"),
+            font=F(size=14, weight="bold"),
         )
         self._analyze_btn.grid(row=7, column=0, sticky="ew", padx=20, pady=(8, 4))
 
@@ -158,7 +159,7 @@ class TrendTab(ctk.CTkFrame):
         self._progress.grid(row=8, column=0, sticky="ew", padx=20, pady=(0, 8))
 
         self._status = ctk.CTkLabel(left, text="", text_color=self.C["dim"],
-                                     font=ctk.CTkFont(size=11))
+                                     font=F(size=11))
         self._status.grid(row=9, column=0, padx=20, pady=(0, 16))
 
     def _build_right_panel(self, parent) -> None:
@@ -186,10 +187,10 @@ class TrendTab(ctk.CTkFrame):
                                  border_color=self.C["border"])
             card.grid(row=0, column=i, sticky="ew", padx=4, pady=4)
             ctk.CTkLabel(card, text=label, text_color=self.C["mute"],
-                         font=ctk.CTkFont(size=10, weight="bold")).grid(
+                         font=F(size=10, weight="bold")).grid(
                 row=0, column=0, sticky="w", padx=10, pady=(8, 0))
             val_lbl = ctk.CTkLabel(card, text=val, text_color=color,
-                                    font=ctk.CTkFont(size=18, weight="bold"))
+                                    font=F(size=18, weight="bold"))
             val_lbl.grid(row=1, column=0, sticky="w", padx=10, pady=(0, 8))
             self._stat_cards.append({"label": label, "widget": val_lbl})
 
@@ -208,12 +209,12 @@ class TrendTab(ctk.CTkFrame):
 
         ctk.CTkLabel(t_hdr, text="인기 키워드 순위",
                      text_color=self.C["text"],
-                     font=ctk.CTkFont(size=12, weight="bold")).grid(
+                     font=F(size=12, weight="bold")).grid(
             row=0, column=0, padx=16, pady=8, sticky="w")
 
         self._gen_time = ctk.CTkLabel(t_hdr, text="",
                                        text_color=self.C["mute"],
-                                       font=ctk.CTkFont(size=10))
+                                       font=F(size=10))
         self._gen_time.grid(row=0, column=1, padx=12, pady=8, sticky="e")
 
         # 키워드 목록
@@ -304,7 +305,7 @@ class TrendTab(ctk.CTkFrame):
         if not keywords:
             ctk.CTkLabel(self._kw_scroll, text="분석된 키워드가 없습니다. 트렌드 분석을 실행하세요.",
                          text_color=self.C["mute"],
-                         font=ctk.CTkFont(size=12)).grid(row=0, column=0, pady=24)
+                         font=F(size=12)).grid(row=0, column=0, pady=24)
             return
 
         if top_kw:
@@ -321,7 +322,7 @@ class TrendTab(ctk.CTkFrame):
 
         for col, (text, w) in enumerate([("#", 40), ("키워드", 0), ("소스", 80), ("점수", 80)]):
             ctk.CTkLabel(hdr_row, text=text, text_color=self.C["mute"],
-                         font=ctk.CTkFont(size=10, weight="bold"),
+                         font=F(size=10, weight="bold"),
                          width=w if w else 0).grid(
                 row=0, column=col, padx=(16 if col == 0 else 8), pady=6,
                 sticky="w" if col < 2 else "e")
@@ -343,7 +344,7 @@ class TrendTab(ctk.CTkFrame):
             # 순위
             ctk.CTkLabel(row, text=f"{i + 1:02d}",
                          text_color=self.C["mute"],
-                         font=ctk.CTkFont(size=11), width=40).grid(
+                         font=F(size=11), width=40).grid(
                 row=0, column=0, padx=16, pady=8, sticky="w")
 
             # 키워드 + 바
@@ -353,7 +354,7 @@ class TrendTab(ctk.CTkFrame):
 
             ctk.CTkLabel(kw_frame, text=kw.get("keyword", ""),
                          text_color=self.C["text"],
-                         font=ctk.CTkFont(size=12, weight="bold" if i < 3 else "normal"),
+                         font=F(size=12, weight="bold" if i < 3 else "normal"),
                          anchor="w").grid(row=0, column=0, sticky="ew")
 
             score = kw.get("score", 0)
@@ -370,13 +371,13 @@ class TrendTab(ctk.CTkFrame):
             src = kw.get("source", "")
             src_color = source_colors.get(src, self.C["dim"])
             ctk.CTkLabel(row, text=src, text_color=src_color,
-                         font=ctk.CTkFont(size=10), width=80).grid(
+                         font=F(size=10), width=80).grid(
                 row=0, column=2, padx=8, pady=8, sticky="e")
 
             # 점수
             ctk.CTkLabel(row, text=f"{score:.1f}",
                          text_color=self.C["dim"],
-                         font=ctk.CTkFont(family="Courier New", size=11), width=80).grid(
+                         font=F(mono=True, size=11), width=80).grid(
                 row=0, column=3, padx=16, pady=8, sticky="e")
 
     def _set_status(self, msg: str, error: bool = False) -> None:

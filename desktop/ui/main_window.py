@@ -4,6 +4,7 @@ import tkinter as tk
 from pathlib import Path
 
 import customtkinter as ctk
+from desktop.ui.fonts import F
 
 # 프로젝트 루트를 sys.path에 추가
 _ROOT = Path(__file__).resolve().parents[2]
@@ -52,7 +53,7 @@ class NavButton(ctk.CTkButton):
             anchor="w",
             corner_radius=7,
             height=36,
-            font=ctk.CTkFont(size=13, weight="normal"),
+            font=F(size=13, weight="normal"),
             fg_color="transparent",
             text_color=C["dim"],
             hover_color=C["panel2"],
@@ -65,13 +66,13 @@ class NavButton(ctk.CTkButton):
             self.configure(
                 fg_color=C["panel3"],
                 text_color=C["text"],
-                font=ctk.CTkFont(size=13, weight="bold"),
+                font=F(size=13, weight="bold"),
             )
         else:
             self.configure(
                 fg_color="transparent",
                 text_color=C["dim"],
-                font=ctk.CTkFont(size=13, weight="normal"),
+                font=F(size=13, weight="normal"),
             )
 
 
@@ -126,21 +127,21 @@ class TubeFlowApp(ctk.CTk):
             corner_radius=7,
             fg_color=C["accent"],
             text_color="#ffffff",
-            font=ctk.CTkFont(size=12, weight="bold"),
+            font=F(size=12, weight="bold"),
         )
         logo_box.grid(row=0, column=0, padx=(0, 10))
 
         logo_text = ctk.CTkFrame(logo_frame, fg_color="transparent")
         logo_text.grid(row=0, column=1)
         ctk.CTkLabel(logo_text, text="TubeFlow", text_color=C["text"],
-                     font=ctk.CTkFont(size=14, weight="bold")).grid(row=0, column=0, sticky="w")
+                     font=F(size=14, weight="bold")).grid(row=0, column=0, sticky="w")
         ctk.CTkLabel(logo_text, text="v0.1.0 · local", text_color=C["mute"],
-                     font=ctk.CTkFont(size=10)).grid(row=1, column=0, sticky="w")
+                     font=F(size=10)).grid(row=1, column=0, sticky="w")
         self._version_label = logo_text.winfo_children()[1]
 
         # 섹션 레이블
         ctk.CTkLabel(sb, text="WORKSPACE", text_color=C["mute"],
-                     font=ctk.CTkFont(size=10, weight="bold")).grid(
+                     font=F(size=10, weight="bold")).grid(
             row=1, column=0, sticky="w", padx=26, pady=(16, 4))
 
         # 네비게이션 버튼
@@ -161,7 +162,7 @@ class TubeFlowApp(ctk.CTk):
         server_frame.grid(row=6, column=0, sticky="ew", padx=12, pady=(0, 8))
 
         ctk.CTkLabel(server_frame, text="SERVER", text_color=C["mute"],
-                     font=ctk.CTkFont(size=10, weight="bold")).grid(
+                     font=F(size=10, weight="bold")).grid(
             row=0, column=0, columnspan=2, sticky="w", padx=12, pady=(10, 4))
 
         self._server_seg = ctk.CTkSegmentedButton(
@@ -172,16 +173,16 @@ class TubeFlowApp(ctk.CTk):
             selected_color=C["accent"],
             selected_hover_color="#FF6B78",
             unselected_color=C["panel3"],
-            font=ctk.CTkFont(size=12, weight="bold"),
+            font=F(size=12, weight="bold"),
         )
         self._server_seg.set("로컬")
         self._server_seg.grid(row=1, column=0, columnspan=2, sticky="ew", padx=10, pady=(0, 6))
 
         self._status_dot = ctk.CTkLabel(server_frame, text="●", text_color=C["green"],
-                                         font=ctk.CTkFont(size=8))
+                                         font=F(size=8))
         self._status_dot.grid(row=2, column=0, sticky="w", padx=(12, 2), pady=(0, 10))
         self._status_label = ctk.CTkLabel(server_frame, text="127.0.0.1:8421",
-                                           text_color=C["dim"], font=ctk.CTkFont(size=11))
+                                           text_color=C["dim"], font=F(size=11))
         self._status_label.grid(row=2, column=1, sticky="w", pady=(0, 10))
         server_frame.grid_columnconfigure(1, weight=1)
 
