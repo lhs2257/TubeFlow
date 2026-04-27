@@ -22,8 +22,9 @@ class Settings(BaseSettings):
     reddit_client_secret: str = Field(default="")
     reddit_user_agent: str = Field(default="TubeFlow/1.0")
 
-    # Anthropic API
-    anthropic_api_key: str = Field(default="")
+    # OpenAI API
+    openai_api_key: str = Field(default="")
+    openai_model: str = Field(default="gpt-4o")
 
     # YouTube API
     youtube_client_id: str = Field(default="")
