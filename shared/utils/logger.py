@@ -19,8 +19,11 @@ def get_logger(name: str) -> logging.Logger:
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    # 콘솔 핸들러
-    console = logging.StreamHandler(sys.stdout)
+    # 콘솔 핸들러 (Windows cp949 환경에서 UTF-8 강제 출력)
+    import io
+    stream = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace") \
+        if hasattr(sys.stdout, "buffer") else sys.stdout
+    console = logging.StreamHandler(stream)
     console.setFormatter(formatter)
     logger.addHandler(console)
 

@@ -15,7 +15,7 @@ try:
     _PYTRENDS_AVAILABLE = True
 except ImportError:
     _PYTRENDS_AVAILABLE = False
-    logger.warning("pytrends 미설치 — Google Trends 기능 비활성화. `pip install pytrends`로 설치하세요.")
+    logger.warning("pytrends 미설치 - Google Trends 기능 비활성화. pip install pytrends 로 설치하세요.")
 
 
 class GoogleTrendAnalyzer:
