@@ -24,6 +24,7 @@ class SourcingTab(ctk.CTkFrame):
         self._articles: list[dict] = []
         self._selected: list[bool] = []
         self._source_vars: dict[str, tk.BooleanVar] = {}
+        self._pending_transfer: dict = {}  # 대본 탭으로 전달할 소재 임시 저장
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -309,14 +310,15 @@ class SourcingTab(ctk.CTkFrame):
         selected = [a for a, s in zip(self._articles, self._selected) if s]
         if not selected:
             return
-        # 첫 번째 선택 항목을 스크립트 탭으로 전달 (향후 이벤트 버스로 확장 가능)
+        # 첫 번째 선택 항목을 _pending_transfer에 저장 후 이벤트 발생
+        # (Windows에서는 event_generate의 data= 인자가 전달되지 않으므로 인스턴스 변수 사용)
         art = selected[0]
-        event_data = {
+        self._pending_transfer = {
             "source_title": art.get("title", ""),
             "source_body": art.get("body", ""),
             "source_url": art.get("url", ""),
         }
-        self.event_generate("<<SendToScript>>", data=str(event_data))
+        self.event_generate("<<SendToScript>>")
         self._set_status(f"'{art['title'][:40]}...' 를 대본 탭으로 전달했습니다.")
 
     def _set_status(self, msg: str, error: bool = False) -> None:

@@ -94,6 +94,9 @@ class TubeFlowApp(ctk.CTk):
         self._build_layout()
         self._switch_tab("collect")
         self._check_server_status()
+        # 탭 간 데이터 전달 이벤트 바인딩
+        self.bind("<<SendToScript>>", self._on_send_to_script)
+        self.bind("<<SendToUpload>>", self._on_send_to_upload)
 
     # ── 레이아웃 빌드 ─────────────────────────────────────────────
 
@@ -227,6 +230,32 @@ class TubeFlowApp(ctk.CTk):
             self.client.set_base_url(url)
             self._status_label.configure(text=url[:24])
         self._check_server_status()
+
+    # ── 탭 간 데이터 전달 핸들러 ─────────────────────────────────
+
+    def _on_send_to_script(self, event) -> None:
+        """소재 수집 탭 -> 대본 작성 탭 데이터 전달."""
+        sourcing_tab = self._tabs.get("collect")
+        if not sourcing_tab or not sourcing_tab._pending_transfer:
+            return
+        data = sourcing_tab._pending_transfer
+        self._switch_tab("script")
+        script_tab = self._tabs["script"]
+        script_tab.load_source(
+            title=data.get("source_title", ""),
+            body=data.get("source_body", ""),
+            url=data.get("source_url", ""),
+        )
+
+    def _on_send_to_upload(self, event) -> None:
+        """대본 작성 탭 -> 업로드 예약 탭 데이터 전달."""
+        script_tab = self._tabs.get("script")
+        if not script_tab or not script_tab._pending_title:
+            return
+        title = script_tab._pending_title
+        self._switch_tab("upload")
+        upload_tab = self._tabs["upload"]
+        upload_tab.prefill_title(title)
 
     def _check_server_status(self) -> None:
         def _ping():

@@ -376,6 +376,13 @@ class UploaderTab(ctk.CTkFrame):
             on_error=lambda e: None,
         )
 
+    def prefill_title(self, title: str) -> None:
+        """대본 작성 탭에서 제목을 전달받아 자동 입력합니다."""
+        if not title:
+            return
+        self._title_entry.delete(0, "end")
+        self._title_entry.insert(0, title)
+
     def _set_form_status(self, msg: str, error: bool = False) -> None:
         color = self.C["accent"] if error else self.C["dim"]
         self._form_status.configure(text=msg, text_color=color)

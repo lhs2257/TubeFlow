@@ -30,6 +30,7 @@ class ScriptTab(ctk.CTkFrame):
         self.C = colors
         self._tone = "informative"
         self._duration = "10"
+        self._pending_title: str = ""  # 업로드 탭으로 전달할 제목 임시 저장
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -337,8 +338,9 @@ class ScriptTab(ctk.CTkFrame):
             self._set_status(f"저장 완료: {path}")
 
     def _send_to_upload(self) -> None:
-        title = self._title_entry.get().strip()
-        self.event_generate("<<SendToUpload>>", data=title)
+        # _pending_title에 저장 후 이벤트 발생 (Windows data= 전달 불가 우회)
+        self._pending_title = self._title_entry.get().strip()
+        self.event_generate("<<SendToUpload>>")
         self._set_status("업로드 탭으로 전달했습니다.")
 
     def _set_status(self, msg: str, error: bool = False) -> None:

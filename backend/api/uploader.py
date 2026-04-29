@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from backend.core.uploader import VideoMetadata, PrivacyStatus, UploadScheduler

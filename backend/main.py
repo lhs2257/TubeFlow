@@ -1,6 +1,8 @@
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from backend.api import sourcing, script, uploader, trend
 from shared.config import get_settings
 from shared.utils import get_logger
 
@@ -23,6 +25,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(sourcing.router,  prefix="/api/v1")
+app.include_router(script.router,    prefix="/api/v1")
+app.include_router(uploader.router,  prefix="/api/v1")
+app.include_router(trend.router,     prefix="/api/v1")
+
 
 @app.get("/health")
 async def health_check():
@@ -33,14 +40,6 @@ async def health_check():
     }
 
 
-from backend.api import sourcing, script, uploader, trend
-app.include_router(sourcing.router,  prefix="/api/v1")
-app.include_router(script.router,    prefix="/api/v1")
-app.include_router(uploader.router,  prefix="/api/v1")
-app.include_router(trend.router,     prefix="/api/v1")
-
-
 if __name__ == "__main__":
-    import uvicorn
     logger.info("TubeFlow 백엔드 시작 중... http://%s:%d", settings.app_host, settings.app_port)
     uvicorn.run("backend.main:app", host=settings.app_host, port=settings.app_port, reload=True)

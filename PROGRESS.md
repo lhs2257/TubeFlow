@@ -1,6 +1,6 @@
 # 작업 현황 (PROGRESS.md)
 
-> 최종 업데이트: 2026-04-27 (data/ gitignore 추가)
+> 최종 업데이트: 2026-04-29 (M6 코드 리뷰 및 버그 수정 완료)
 
 ## 현재 단계
 
@@ -126,3 +126,17 @@
 ## 다음 할 일
 
 **[M7-1] PyInstaller .exe 빌드** (deploy/)
+
+---
+
+## 작업 로그 (계속)
+
+### 2026-04-29
+- [v] M6 코드 리뷰 및 버그 수정 완료
+  - [!] 버그: 탭 간 데이터 전달 미동작 수정
+    - Windows에서 `event_generate(data=)` 인자 전달 불가 문제 해결
+    - `_pending_transfer` / `_pending_title` 인스턴스 변수로 우회
+    - `main_window.py`에 `<<SendToScript>>` / `<<SendToUpload>>` 이벤트 바인딩 추가
+    - `UploaderTab.prefill_title()` 메서드 추가
+  - [v] `backend/api/uploader.py` 미사용 import 제거 (UploadFile, File, Form)
+  - [v] `backend/main.py` import 순서 PEP8 정리 (상단으로 이동)
