@@ -7,7 +7,8 @@ from shared.utils import get_logger
 
 logger = get_logger(__name__)
 
-DEFAULT_TIMEOUT = 30
+DEFAULT_TIMEOUT  = 30
+COLLECT_TIMEOUT  = 180  # 수집 + 번역(OpenAI) 포함 최대 대기 시간
 
 
 class APIError(Exception):
@@ -42,7 +43,7 @@ class APIClient:
             payload["keywords"] = keywords
         if sources:
             payload["sources"] = sources
-        return self._post("/api/v1/sourcing/collect", payload)
+        return self._post("/api/v1/sourcing/collect", payload, timeout=COLLECT_TIMEOUT)
 
     def get_sources_info(self) -> dict:
         return self._get("/api/v1/sourcing/sources")
@@ -178,10 +179,10 @@ class APIClient:
         except requests.Timeout:
             raise APIError("요청 시간이 초과되었습니다.")
 
-    def _post(self, path: str, data: dict) -> dict:
+    def _post(self, path: str, data: dict, timeout: int = DEFAULT_TIMEOUT) -> dict:
         url = self.base_url + path
         try:
-            resp = self._session.post(url, json=data, timeout=DEFAULT_TIMEOUT)
+            resp = self._session.post(url, json=data, timeout=timeout)
             resp.raise_for_status()
             return resp.json()
         except requests.HTTPError as e:
