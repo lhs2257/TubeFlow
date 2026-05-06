@@ -1,4 +1,5 @@
 import tkinter as tk
+import webbrowser
 from datetime import datetime
 
 import customtkinter as ctk
@@ -334,7 +335,7 @@ class SourcingTab(ctk.CTkFrame):
             checkmark_color="#ffffff",
             command=lambda i=idx, v=var: self._toggle(i, v.get()),
         )
-        cb.grid(row=0, column=0, padx=(12, 4), pady=10, rowspan=2)
+        cb.grid(row=0, column=0, padx=(12, 4), pady=10, rowspan=3)
 
         # 카테고리 배지
         cat = art.get("category", "world")
@@ -344,24 +345,59 @@ class SourcingTab(ctk.CTkFrame):
                      anchor="center").grid(
             row=0, column=1, padx=(4, 6), pady=(10, 0), sticky="n")
 
-        # 소스명
+        # 소스명 + 날짜 (한 줄)
         source = art.get("source_name", "")
-        ctk.CTkLabel(row, text=source[:22], text_color=self.C["dim"],
-                     font=F(size=10, weight="bold")).grid(
-            row=0, column=2, sticky="w", padx=4, pady=(10, 0))
+        pub = art.get("published_at", "")[:10]
+        meta_frame = ctk.CTkFrame(row, fg_color="transparent")
+        meta_frame.grid(row=0, column=2, sticky="ew", padx=4, pady=(10, 0))
+        meta_frame.grid_columnconfigure(0, weight=1)
+
+        ctk.CTkLabel(meta_frame, text=source[:28], text_color=self.C["dim"],
+                     font=F(size=10, weight="bold"), anchor="w").grid(
+            row=0, column=0, sticky="w")
+        ctk.CTkLabel(meta_frame, text=pub, text_color=self.C["mute"],
+                     font=F(size=10)).grid(row=0, column=1, padx=(8, 0), sticky="e")
 
         # 제목
         title = art.get("title", "(제목 없음)")[:120]
         ctk.CTkLabel(row, text=title, text_color=self.C["text"],
-                     font=F(size=12),
-                     wraplength=480, anchor="w", justify="left").grid(
-            row=1, column=1, columnspan=2, sticky="ew", padx=4, pady=(0, 8))
+                     font=F(size=12, weight="bold"),
+                     wraplength=500, anchor="w", justify="left").grid(
+            row=1, column=1, columnspan=2, sticky="ew", padx=4, pady=(2, 0))
 
-        # 날짜
-        pub = art.get("published_at", "")[:10]
-        ctk.CTkLabel(row, text=pub, text_color=self.C["mute"],
-                     font=F(size=10)).grid(
-            row=0, column=3, padx=12, pady=(10, 0), sticky="e")
+        # 요약 본문 (body 앞 120자)
+        body = art.get("body", "").strip()
+        if body:
+            preview = body[:120] + ("..." if len(body) > 120 else "")
+            ctk.CTkLabel(row, text=preview, text_color=self.C["mute"],
+                         font=F(size=11),
+                         wraplength=500, anchor="w", justify="left").grid(
+                row=2, column=1, columnspan=2, sticky="ew", padx=4, pady=(2, 0))
+
+        # 원문 보기 버튼
+        url = art.get("url", "")
+        btn_frame = ctk.CTkFrame(row, fg_color="transparent")
+        btn_frame.grid(row=3, column=1, columnspan=2, sticky="w", padx=4, pady=(4, 8))
+
+        if url:
+            link_btn = ctk.CTkButton(
+                btn_frame,
+                text="원문 보기 ->",
+                command=lambda u=url: webbrowser.open(u),
+                height=22, width=90,
+                fg_color="transparent",
+                hover_color=self.C["panel2"],
+                text_color=self.C["blue"],
+                font=F(size=10, weight="bold"),
+                border_width=1,
+                border_color=self.C["blue"],
+                corner_radius=4,
+            )
+            link_btn.grid(row=0, column=0)
+        else:
+            ctk.CTkLabel(btn_frame, text="링크 없음",
+                         text_color=self.C["mute"],
+                         font=F(size=10)).grid(row=0, column=0)
 
     def _toggle(self, idx: int, val: bool) -> None:
         self._selected[idx] = val
