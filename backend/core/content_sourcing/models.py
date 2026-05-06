@@ -34,8 +34,19 @@ class Article:
 
 @dataclass
 class CollectConfig:
-    keywords: list[str] = field(default_factory=lambda: ["travel", "tourism"])
+    keywords: list[str] = field(default_factory=lambda: [
+        "China", "Japan", "Southeast Asia", "ASEAN",
+        "geopolitics", "Asia Pacific", "Taiwan", "North Korea",
+    ])
     countries: list[str] = field(default_factory=list)   # 빈 리스트 = 전세계
     language: str = "en"
     limit: int = 20
-    sources: list[str] = field(default_factory=lambda: ["guardian", "newsapi", "rss", "youtube"])
+    sources: list[str] = field(default_factory=lambda: [
+        "guardian", "newsapi",
+        "scmp", "rfa",
+        "nhk", "nikkei",
+        "cna", "diplomat",
+        "koreaherald", "reuters_asia", "bbc_asia",
+        "youtube",
+    ])
+    rss_feeds: list[str] = field(default_factory=list)  # 선택된 RSS 피드 ID 목록

@@ -7,15 +7,37 @@ from desktop.ui.fonts import F
 from desktop.client import APIClient
 
 
-class SourcingTab(ctk.CTkFrame):
-    """소재 수집 탭 — Guardian / NewsAPI / RSS / YouTube 통합 수집."""
+# ── 소스 정의 (카테고리, ID, 표시명, 설명) ──────────────────────────
+SOURCE_GROUPS = [
+    ("중국 이슈", [
+        ("scmp",     "South China Morning Post", "홍콩 기반 · 중국 정치/경제 전문"),
+        ("rfa",      "Radio Free Asia",          "중국 · 북한 · 동남아 공산국가 특화"),
+    ]),
+    ("일본 이슈", [
+        ("nhk",      "NHK World",                "일본 국영방송 · 정치/사회 국제판"),
+        ("nikkei",   "Nikkei Asia",              "일본 경제 · 기업 · 정세 분석"),
+    ]),
+    ("동남아 이슈", [
+        ("cna",      "Channel NewsAsia",         "싱가포르 기반 · 동남아 전반"),
+        ("diplomat", "The Diplomat",             "아시아 지정학 · 외교 심층 분석"),
+    ]),
+    ("국제 / 한국 시각", [
+        ("koreaherald",  "Korea Herald",         "한국 주요 이슈 영문 보도"),
+        ("reuters_asia", "Reuters Asia",         "로이터 아시아 속보"),
+        ("bbc_asia",     "BBC News Asia",        "BBC 아시아 심층 보도"),
+    ]),
+    ("통합 검색", [
+        ("guardian", "The Guardian",             "세계 정치 · 여행 심층 기사 (API 키 필요)"),
+        ("newsapi",  "NewsAPI",                  "키워드 기반 전세계 뉴스 검색 (API 키 필요)"),
+        ("youtube",  "YouTube 트렌드",            "아시아 인기 영상 트렌드 (국가 코드 기반)"),
+    ]),
+]
 
-    SOURCES = [
-        ("guardian",  "The Guardian"),
-        ("newsapi",   "NewsAPI"),
-        ("rss",       "RSS 피드"),
-        ("youtube",   "YouTube 트렌드"),
-    ]
+DEFAULT_KEYWORDS = "China, Japan, Southeast Asia, ASEAN, geopolitics, Asia Pacific, Taiwan, North Korea"
+
+
+class SourcingTab(ctk.CTkFrame):
+    """소재 수집 탭 — 아시아/정치 특화 멀티소스 수집."""
 
     def __init__(self, master, client: APIClient, colors: dict, **kwargs):
         super().__init__(master, fg_color=colors["bg"], corner_radius=0, **kwargs)
@@ -46,7 +68,7 @@ class SourcingTab(ctk.CTkFrame):
             row=0, column=0, padx=24, pady=16, sticky="w")
 
         ctk.CTkLabel(hdr,
-                     text="Guardian · NewsAPI · RSS · YouTube 에서 여행 콘텐츠 소재를 수집합니다",
+                     text="중국 · 일본 · 동남아 · 국제 정세 소재를 수집합니다",
                      text_color=self.C["dim"],
                      font=F(size=12)).grid(
             row=0, column=1, padx=8, pady=16, sticky="w")
@@ -63,90 +85,129 @@ class SourcingTab(ctk.CTkFrame):
         self._build_right_panel(body)
 
     def _build_left_panel(self, parent) -> None:
-        left = ctk.CTkFrame(parent, width=300, fg_color=self.C["panel"], corner_radius=0)
-        left.grid(row=0, column=0, sticky="nsew")
-        left.grid_propagate(False)
-        left.grid_columnconfigure(0, weight=1)
+        # 좌측 패널 전체를 스크롤 가능하게
+        left_outer = ctk.CTkFrame(parent, width=300, fg_color=self.C["panel"], corner_radius=0)
+        left_outer.grid(row=0, column=0, sticky="nsew")
+        left_outer.grid_propagate(False)
+        left_outer.grid_columnconfigure(0, weight=1)
+        left_outer.grid_rowconfigure(1, weight=1)
 
-        pad = {"padx": 20, "pady": 6}
+        # 키워드 입력 (스크롤 밖 고정)
+        kw_frame = ctk.CTkFrame(left_outer, fg_color=self.C["panel"], corner_radius=0)
+        kw_frame.grid(row=0, column=0, sticky="ew")
+        kw_frame.grid_columnconfigure(0, weight=1)
 
-        # 키워드
-        ctk.CTkLabel(left, text="키워드", text_color=self.C["dim"],
+        ctk.CTkLabel(kw_frame, text="검색 키워드", text_color=self.C["dim"],
                      font=F(size=11, weight="bold")).grid(
-            row=0, column=0, sticky="w", padx=20, pady=(20, 2))
+            row=0, column=0, sticky="w", padx=20, pady=(16, 2))
         self._kw_entry = ctk.CTkTextbox(
-            left, height=72, fg_color=self.C["panel2"],
+            kw_frame, height=64, fg_color=self.C["panel2"],
             text_color=self.C["text"], font=F(size=12),
             border_width=1, border_color=self.C["border"],
         )
-        self._kw_entry.insert("1.0", "travel, tourism, vacation")
-        self._kw_entry.grid(row=1, column=0, sticky="ew", **pad)
+        self._kw_entry.insert("1.0", DEFAULT_KEYWORDS)
+        self._kw_entry.grid(row=1, column=0, sticky="ew", padx=20, pady=(0, 8))
 
-        # 소스 선택
-        ctk.CTkLabel(left, text="수집 소스", text_color=self.C["dim"],
-                     font=F(size=11, weight="bold")).grid(
-            row=2, column=0, sticky="w", padx=20, pady=(12, 2))
+        # 소스 선택 (스크롤 영역)
+        scroll = ctk.CTkScrollableFrame(
+            left_outer, fg_color=self.C["panel"],
+            scrollbar_button_color=self.C["panel3"],
+        )
+        scroll.grid(row=1, column=0, sticky="nsew")
+        scroll.grid_columnconfigure(0, weight=1)
 
-        src_frame = ctk.CTkFrame(left, fg_color="transparent")
-        src_frame.grid(row=3, column=0, sticky="ew", padx=20, pady=4)
-        src_frame.grid_columnconfigure((0, 1), weight=1)
+        row_idx = 0
+        for group_name, sources in SOURCE_GROUPS:
+            # 그룹 헤더
+            grp_hdr = ctk.CTkFrame(scroll, fg_color=self.C["panel2"], corner_radius=6)
+            grp_hdr.grid(row=row_idx, column=0, sticky="ew", padx=12, pady=(10, 4))
+            grp_hdr.grid_columnconfigure(0, weight=1)
 
-        for i, (src_id, label) in enumerate(self.SOURCES):
-            var = tk.BooleanVar(value=True)
-            self._source_vars[src_id] = var
-            cb = ctk.CTkCheckBox(
-                src_frame, text=label, variable=var,
-                text_color=self.C["text"], font=F(size=12),
-                fg_color=self.C["accent"], hover_color="#FF6B78",
-                checkmark_color="#ffffff",
-            )
-            cb.grid(row=i // 2, column=i % 2, sticky="w", pady=3)
+            ctk.CTkLabel(grp_hdr, text=group_name,
+                         text_color=self.C["accent"],
+                         font=F(size=11, weight="bold")).grid(
+                row=0, column=0, sticky="w", padx=10, pady=5)
+            row_idx += 1
 
-        # 수집 개수
-        ctk.CTkLabel(left, text="소스당 최대 수집", text_color=self.C["dim"],
-                     font=F(size=11, weight="bold")).grid(
-            row=4, column=0, sticky="w", padx=20, pady=(12, 2))
+            for src_id, src_name, src_desc in sources:
+                var = tk.BooleanVar(value=True)
+                self._source_vars[src_id] = var
 
-        limit_frame = ctk.CTkFrame(left, fg_color="transparent")
-        limit_frame.grid(row=5, column=0, sticky="ew", padx=20)
+                # 소스 카드
+                card = ctk.CTkFrame(scroll, fg_color="transparent", corner_radius=0)
+                card.grid(row=row_idx, column=0, sticky="ew", padx=12, pady=1)
+                card.grid_columnconfigure(1, weight=1)
+
+                cb = ctk.CTkCheckBox(
+                    card, text="", variable=var, width=20,
+                    fg_color=self.C["accent"], hover_color="#FF6B78",
+                    checkmark_color="#ffffff",
+                )
+                cb.grid(row=0, column=0, padx=(4, 6), pady=4, rowspan=2)
+
+                ctk.CTkLabel(card, text=src_name,
+                             text_color=self.C["text"],
+                             font=F(size=12, weight="bold"),
+                             anchor="w").grid(row=0, column=1, sticky="ew", pady=(4, 0))
+
+                ctk.CTkLabel(card, text=src_desc,
+                             text_color=self.C["mute"],
+                             font=F(size=10),
+                             anchor="w").grid(row=1, column=1, sticky="ew", pady=(0, 4))
+
+                row_idx += 1
+
+        # 수집 개수 슬라이더
+        row_idx_outer = 2
+        limit_frame = ctk.CTkFrame(left_outer, fg_color=self.C["panel"], corner_radius=0)
+        limit_frame.grid(row=row_idx_outer, column=0, sticky="ew")
         limit_frame.grid_columnconfigure(0, weight=1)
 
+        ctk.CTkLabel(limit_frame, text="소스당 최대 수집",
+                     text_color=self.C["dim"],
+                     font=F(size=11, weight="bold")).grid(
+            row=0, column=0, sticky="w", padx=20, pady=(8, 2))
+
+        sl_row = ctk.CTkFrame(limit_frame, fg_color="transparent")
+        sl_row.grid(row=1, column=0, sticky="ew", padx=20)
+        sl_row.grid_columnconfigure(0, weight=1)
+
         self._limit_var = tk.IntVar(value=20)
-        self._limit_label = ctk.CTkLabel(limit_frame, text="20개",
+        self._limit_label = ctk.CTkLabel(sl_row, text="20개",
                                           text_color=self.C["text"],
                                           font=F(size=12))
         self._limit_label.grid(row=0, column=1, padx=(8, 0))
 
-        slider = ctk.CTkSlider(
-            limit_frame, from_=5, to=50, number_of_steps=9,
+        ctk.CTkSlider(
+            sl_row, from_=5, to=50, number_of_steps=9,
             variable=self._limit_var,
             command=lambda v: self._limit_label.configure(text=f"{int(v)}개"),
             button_color=self.C["accent"], progress_color=self.C["accent"],
-        )
-        slider.grid(row=0, column=0, sticky="ew")
-
-        # 스페이서
-        ctk.CTkFrame(left, fg_color="transparent").grid(row=6, column=0, sticky="nsew")
-        left.grid_rowconfigure(6, weight=1)
+        ).grid(row=0, column=0, sticky="ew")
 
         # 수집 버튼
+        btn_frame = ctk.CTkFrame(left_outer, fg_color=self.C["panel"], corner_radius=0)
+        btn_frame.grid(row=3, column=0, sticky="ew")
+        btn_frame.grid_columnconfigure(0, weight=1)
+
         self._collect_btn = ctk.CTkButton(
-            left, text="수집 실행",
+            btn_frame, text="수집 실행",
             command=self._run_collect,
             height=40,
             fg_color=self.C["accent"], hover_color="#FF6B78",
             font=F(size=14, weight="bold"),
         )
-        self._collect_btn.grid(row=7, column=0, sticky="ew", padx=20, pady=(8, 4))
+        self._collect_btn.grid(row=0, column=0, sticky="ew", padx=20, pady=(8, 4))
 
-        self._progress_bar = ctk.CTkProgressBar(left, fg_color=self.C["panel2"],
+        self._progress_bar = ctk.CTkProgressBar(btn_frame, fg_color=self.C["panel2"],
                                                   progress_color=self.C["accent"])
         self._progress_bar.set(0)
-        self._progress_bar.grid(row=8, column=0, sticky="ew", padx=20, pady=(0, 16))
+        self._progress_bar.grid(row=1, column=0, sticky="ew", padx=20, pady=(0, 4))
 
-        self._status_lbl = ctk.CTkLabel(left, text="", text_color=self.C["dim"],
+        self._status_lbl = ctk.CTkLabel(btn_frame, text="",
+                                         text_color=self.C["dim"],
                                          font=F(size=11))
-        self._status_lbl.grid(row=9, column=0, padx=20, pady=(0, 16))
+        self._status_lbl.grid(row=2, column=0, padx=20, pady=(0, 12))
 
     def _build_right_panel(self, parent) -> None:
         right = ctk.CTkFrame(parent, fg_color=self.C["bg"], corner_radius=0)
@@ -165,25 +226,22 @@ class SourcingTab(ctk.CTkFrame):
                                           font=F(size=13, weight="bold"))
         self._count_label.grid(row=0, column=0, padx=20, pady=10, sticky="w")
 
-        btn_frame = ctk.CTkFrame(toolbar, fg_color="transparent")
-        btn_frame.grid(row=0, column=2, padx=12, pady=6)
-
         self._send_btn = ctk.CTkButton(
-            btn_frame, text="대본으로 보내기",
+            toolbar, text="대본으로 보내기",
             command=self._send_to_script,
             height=30, width=130,
             fg_color=self.C["accent"], hover_color="#FF6B78",
             font=F(size=12, weight="bold"),
             state="disabled",
         )
-        self._send_btn.grid(row=0, column=0, padx=(0, 4))
+        self._send_btn.grid(row=0, column=2, padx=12, pady=6)
 
         # 결과 목록
         self._result_frame = ctk.CTkScrollableFrame(
             right, fg_color=self.C["bg"],
             scrollbar_button_color=self.C["panel3"],
         )
-        self._result_frame.grid(row=1, column=0, sticky="nsew", padx=0, pady=0)
+        self._result_frame.grid(row=1, column=0, sticky="nsew")
         self._result_frame.grid_columnconfigure(0, weight=1)
 
     # ── 동작 ─────────────────────────────────────────────────────
@@ -191,7 +249,7 @@ class SourcingTab(ctk.CTkFrame):
     def _run_collect(self) -> None:
         keywords_raw = self._kw_entry.get("1.0", "end").strip()
         keywords = [k.strip() for k in keywords_raw.split(",") if k.strip()]
-        sources = [sid for sid, _ in self.SOURCES if self._source_vars[sid].get()]
+        sources = [sid for sid, var in self._source_vars.items() if var.get()]
         limit = int(self._limit_var.get())
 
         if not sources:
@@ -201,7 +259,6 @@ class SourcingTab(ctk.CTkFrame):
         self._collect_btn.configure(state="disabled", text="수집 중...")
         self._progress_bar.set(0)
         self._set_status("수집 요청 전송 중...")
-
         self._start_progress_animation()
 
         self.client.async_call(
@@ -238,7 +295,6 @@ class SourcingTab(ctk.CTkFrame):
         self._articles = articles
         self._selected = [False] * len(articles)
 
-        # 기존 위젯 제거
         for w in self._result_frame.winfo_children():
             w.destroy()
 
@@ -250,6 +306,17 @@ class SourcingTab(ctk.CTkFrame):
 
         self._update_send_btn()
 
+    # 카테고리별 배지 색상
+    _CATEGORY_COLORS = {
+        "china":  "#FF6B6B",
+        "japan":  "#F5B544",
+        "sea":    "#3DD68C",
+        "korea":  "#5B9CFF",
+        "world":  "#A78BFA",
+        "travel": "#FB923C",
+        "video":  "#FF4655",
+    }
+
     def _add_article_row(self, idx: int, art: dict) -> None:
         row = ctk.CTkFrame(
             self._result_frame,
@@ -257,7 +324,7 @@ class SourcingTab(ctk.CTkFrame):
             border_width=1, border_color=self.C["border"],
         )
         row.grid(row=idx, column=0, sticky="ew", padx=12, pady=4)
-        row.grid_columnconfigure(1, weight=1)
+        row.grid_columnconfigure(2, weight=1)
 
         # 체크박스
         var = tk.BooleanVar(value=False)
@@ -267,34 +334,34 @@ class SourcingTab(ctk.CTkFrame):
             checkmark_color="#ffffff",
             command=lambda i=idx, v=var: self._toggle(i, v.get()),
         )
-        cb.grid(row=0, column=0, padx=(12, 4), pady=12, rowspan=2)
+        cb.grid(row=0, column=0, padx=(12, 4), pady=10, rowspan=2)
 
-        # 소스 배지
-        source = art.get("source_name", art.get("source", ""))
-        src_colors = {
-            "Guardian": self.C["blue"],
-            "NewsAPI": self.C["green"],
-            "RSS": self.C["amber"],
-            "YouTube Trends": self.C["accent"],
-        }
-        src_color = next((v for k, v in src_colors.items() if k.lower() in source.lower()), self.C["dim"])
+        # 카테고리 배지
+        cat = art.get("category", "world")
+        cat_color = self._CATEGORY_COLORS.get(cat, self.C["dim"])
+        ctk.CTkLabel(row, text=cat.upper(), text_color=cat_color,
+                     font=F(size=9, weight="bold"), width=50,
+                     anchor="center").grid(
+            row=0, column=1, padx=(4, 6), pady=(10, 0), sticky="n")
 
-        ctk.CTkLabel(row, text=source[:18], text_color=src_color,
+        # 소스명
+        source = art.get("source_name", "")
+        ctk.CTkLabel(row, text=source[:22], text_color=self.C["dim"],
                      font=F(size=10, weight="bold")).grid(
-            row=0, column=1, sticky="w", padx=4, pady=(10, 0))
+            row=0, column=2, sticky="w", padx=4, pady=(10, 0))
 
         # 제목
         title = art.get("title", "(제목 없음)")[:120]
         ctk.CTkLabel(row, text=title, text_color=self.C["text"],
                      font=F(size=12),
-                     wraplength=500, anchor="w", justify="left").grid(
-            row=1, column=1, sticky="ew", padx=4, pady=(0, 8))
+                     wraplength=480, anchor="w", justify="left").grid(
+            row=1, column=1, columnspan=2, sticky="ew", padx=4, pady=(0, 8))
 
         # 날짜
         pub = art.get("published_at", "")[:10]
         ctk.CTkLabel(row, text=pub, text_color=self.C["mute"],
                      font=F(size=10)).grid(
-            row=0, column=2, padx=12, pady=(10, 0), sticky="e")
+            row=0, column=3, padx=12, pady=(10, 0), sticky="e")
 
     def _toggle(self, idx: int, val: bool) -> None:
         self._selected[idx] = val
@@ -303,15 +370,15 @@ class SourcingTab(ctk.CTkFrame):
     def _update_send_btn(self) -> None:
         cnt = sum(self._selected)
         state = "normal" if cnt > 0 else "disabled"
-        self._send_btn.configure(state=state,
-                                   text=f"대본으로 보내기 ({cnt})" if cnt else "대본으로 보내기")
+        self._send_btn.configure(
+            state=state,
+            text=f"대본으로 보내기 ({cnt})" if cnt else "대본으로 보내기",
+        )
 
     def _send_to_script(self) -> None:
         selected = [a for a, s in zip(self._articles, self._selected) if s]
         if not selected:
             return
-        # 첫 번째 선택 항목을 _pending_transfer에 저장 후 이벤트 발생
-        # (Windows에서는 event_generate의 data= 인자가 전달되지 않으므로 인스턴스 변수 사용)
         art = selected[0]
         self._pending_transfer = {
             "source_title": art.get("title", ""),

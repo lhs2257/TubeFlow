@@ -10,6 +10,9 @@ from .models import Article
 logger = get_logger(__name__)
 BASE_URL = "https://content.guardianapis.com/search"
 
+# 수집할 섹션 목록 (travel 고정 → 다양한 섹션으로 확장)
+GUARDIAN_SECTIONS = ["world", "politics", "travel", "international"]
+
 
 class GuardianCollector:
     def __init__(self):
@@ -17,9 +20,11 @@ class GuardianCollector:
 
     def fetch(self, keywords: list[str], limit: int = 20) -> list[Article]:
         query = " OR ".join(keywords)
+        # 여러 섹션을 순회하며 수집 후 합산
+        section_str = "|".join(GUARDIAN_SECTIONS)
         params = {
             "q": query,
-            "section": "travel",
+            "section": section_str,
             "show-fields": "bodyText,thumbnail",
             "page-size": min(limit, 50),
             "order-by": "newest",
@@ -38,6 +43,8 @@ class GuardianCollector:
 
     def _to_article(self, raw: dict) -> Article:
         fields = raw.get("fields", {})
+        section = raw.get("sectionId", "world")
+        category = "travel" if section == "travel" else "world"
         return Article(
             id=hashlib.md5(raw["id"].encode()).hexdigest(),
             title=raw.get("webTitle", ""),
@@ -47,4 +54,5 @@ class GuardianCollector:
             url=raw.get("webUrl", ""),
             published_at=datetime.fromisoformat(raw["webPublicationDate"].replace("Z", "+00:00")),
             thumbnail=fields.get("thumbnail", ""),
+            category=category,
         )

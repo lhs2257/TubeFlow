@@ -4,7 +4,7 @@ from shared.utils import get_logger, save_json, save_csv, timestamped_filename
 from .models import CollectConfig, Article
 from .guardian import GuardianCollector
 from .newsapi import NewsAPICollector
-from .rss_reader import RSSCollector
+from .rss_reader import RSSCollector, RSS_FEEDS, RSS_SOURCE_IDS
 from .youtube_trend import YouTubeTrendCollector
 
 logger = get_logger(__name__)
@@ -13,30 +13,35 @@ OUTPUT_DIR = Path("data/sourcing")
 
 class ContentSourcingService:
     def __init__(self):
-        self._collectors = {
-            "guardian": GuardianCollector(),
-            "newsapi":  NewsAPICollector(),
-            "rss":      RSSCollector(),
-            "youtube":  YouTubeTrendCollector(),
-        }
+        self._guardian  = GuardianCollector()
+        self._newsapi   = NewsAPICollector()
+        self._rss       = RSSCollector()
+        self._youtube   = YouTubeTrendCollector()
 
     def collect(self, config: CollectConfig) -> list[Article]:
         logger.info("소재 수집 시작 - 소스: %s", config.sources)
         articles: list[Article] = []
 
+        # 선택된 소스 중 RSS 피드 ID만 추려 한 번에 수집
+        selected_rss = [s for s in config.sources if s in RSS_SOURCE_IDS]
+
         for source in config.sources:
-            collector = self._collectors.get(source)
-            if not collector:
-                continue
             try:
                 if source == "guardian":
-                    fetched = collector.fetch(config.keywords, config.limit)
+                    fetched = self._guardian.fetch(config.keywords, config.limit)
                 elif source == "newsapi":
-                    fetched = collector.fetch(config.keywords, config.language, config.limit)
-                elif source == "rss":
-                    fetched = collector.fetch(limit_per_feed=max(1, config.limit // 6))
+                    fetched = self._newsapi.fetch(config.keywords, config.language, config.limit)
                 elif source == "youtube":
-                    fetched = collector.fetch_multi_region(limit_per_region=max(1, config.limit // 8))
+                    fetched = self._youtube.fetch_multi_region(limit_per_region=max(1, config.limit // 8))
+                elif source in RSS_SOURCE_IDS:
+                    # RSS는 선택된 피드 목록 전체를 한 번만 수집 (중복 방지)
+                    if source == selected_rss[0]:
+                        fetched = self._rss.fetch(
+                            limit_per_feed=max(1, config.limit // max(len(selected_rss), 1)),
+                            feed_ids=selected_rss,
+                        )
+                    else:
+                        continue  # 첫 번째 RSS 소스에서 이미 전체 수집함
                 else:
                     fetched = []
                 articles.extend(fetched)

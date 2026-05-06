@@ -1,6 +1,6 @@
 # 작업 현황 (PROGRESS.md)
 
-> 최종 업데이트: 2026-04-29 (M6 코드 리뷰 및 버그 수정 완료)
+> 최종 업데이트: 2026-05-06 (M2 소재 수집 — 아시아/정치 특화 개편)
 
 ## 현재 단계
 
@@ -130,6 +130,18 @@
 ---
 
 ## 작업 로그 (계속)
+
+### 2026-05-06
+- [v] M2 소재 수집 — 한국 40대+ 중장년층 대상 아시아/정치 특화 개편
+  - rss_reader.py: 여행 RSS 전체 제거 → 중국/일본/동남아/국제 9개 피드로 교체
+    - 중국: South China Morning Post, Radio Free Asia
+    - 일본: NHK World, Nikkei Asia
+    - 동남아: Channel NewsAsia, The Diplomat
+    - 국제/한국: Korea Herald, Reuters Asia, BBC News Asia
+  - guardian.py: travel 섹션 고정 제거 → world/politics/travel/international 복수 섹션
+  - models.py: 기본 키워드 아시아 정세 중심으로 변경 (영어)
+  - service.py + api/sourcing.py: 새 RSS 소스 ID 처리 로직 추가
+  - tab_sourcing.py: 카테고리별 그룹 체크박스 + 소스 설명 한 줄 UI 전면 개편
 
 ### 2026-04-29
 - [v] M6 코드 리뷰 및 버그 수정 완료
