@@ -1,3 +1,4 @@
+import re
 import tkinter as tk
 
 import customtkinter as ctk
@@ -292,6 +293,9 @@ class ScriptTab(ctk.CTkFrame):
                                self._progress.configure(mode="determinate"),
                                self._progress.set(0)))
 
+    # 섹션 타입 → 한국어 라벨
+    _SECTION_LABELS = {"intro": "인트로", "main": "본문", "outro": "아웃트로"}
+
     def _render_script(self, result: dict) -> None:
         self._progress.stop()
         self._progress.configure(mode="determinate")
@@ -299,9 +303,12 @@ class ScriptTab(ctk.CTkFrame):
         self._gen_btn.configure(state="normal", text="대본 생성")
 
         sections = result.get("sections", [])
-        full_text = "\n\n".join(
-            f"[{s.get('title', '')}]\n{s.get('content', '')}" for s in sections
-        ) if sections else result.get("title", "") + "\n\n(대본 내용 없음)"
+        parts = []
+        for s in sections:
+            label = self._SECTION_LABELS.get(s.get("type", ""), s.get("type", ""))
+            content = self._to_sentences(s.get("content", ""))
+            parts.append(f"── {label} ──\n{content}")
+        full_text = "\n\n".join(parts) if parts else "(대본 내용 없음)"
 
         self._editor.delete("1.0", "end")
         self._editor.insert("1.0", full_text)
@@ -315,6 +322,14 @@ class ScriptTab(ctk.CTkFrame):
         self._char_label.configure(text=f"{char_count}자 · 약 {est_sec}초")
         self._send_upload_btn.configure(state="normal")
         self._set_status("대본 생성 완료.")
+
+    @staticmethod
+    def _to_sentences(text: str) -> str:
+        """문장 부호(. ! ?) 기준으로 한 줄씩 줄바꿈합니다."""
+        # 문장 끝 부호 뒤에 줄바꿈 삽입 (숫자 소수점은 제외)
+        text = text.strip()
+        sentences = re.split(r'(?<=[.!?。！？])\s+', text)
+        return "\n".join(s.strip() for s in sentences if s.strip())
 
     def _update_char_count(self, event=None) -> None:
         text = self._editor.get("1.0", "end").strip()
