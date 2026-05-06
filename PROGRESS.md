@@ -1,6 +1,6 @@
 # 작업 현황 (PROGRESS.md)
 
-> 최종 업데이트: 2026-05-06 (바탕화면 바로가기 런처 추가)
+> 최종 업데이트: 2026-05-06 (콘솔창 없는 Python 런처 및 바로가기 완성)
 
 ## 현재 단계
 
@@ -132,9 +132,11 @@
 ## 작업 로그 (계속)
 
 ### 2026-05-06
-- [v] 런처 — 바탕화면 바로가기 추가
-  - launch.bat: 백엔드 + 앱 한 번에 시작, 앱 종료 시 백엔드 자동 정리
-  - 바탕화면에 TubeFlow.lnk 바로가기 생성
+- [v] 런처 — 바탕화면 바로가기 완성
+  - launch_gui.pyw: 콘솔창 없이 백엔드+앱 동시 실행 (CREATE_NO_WINDOW)
+  - create_shortcut.py: 바탕화면 TubeFlow.lnk 바로가기 생성 스크립트
+  - launch.bat: 터미널용 배치 런처 (백업용)
+  - 앱 종료 시 백엔드 자동 정리
 - [v] 대본 — URL 전체 분석 및 표시 개선
   - scraper.py: trafilatura 기반 기사 URL 전체 본문 추출 (최대 3000자)
   - service.py: URL 크롤링 본문으로 source_body 교체 후 대본 생성
