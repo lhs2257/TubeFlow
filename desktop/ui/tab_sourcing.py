@@ -34,7 +34,16 @@ SOURCE_GROUPS = [
     ]),
 ]
 
-DEFAULT_KEYWORDS = "China, Japan, Southeast Asia, ASEAN, geopolitics, Asia Pacific, Taiwan, North Korea"
+# 기본 체크 소스: 중국 + 동남아만 ON
+DEFAULT_CHECKED = {"scmp", "rfa", "cna", "diplomat"}
+
+# 초기 폴백 키워드 (트렌드 로드 전 표시)
+DEFAULT_KEYWORDS = (
+    "Taiwan strait, South China Sea, Xi Jinping, China economy, "
+    "Myanmar coup, Cambodia China, Vietnam politics, North Korea missile, "
+    "Indo-Pacific, US China rivalry, ASEAN summit, Japan military, "
+    "Asia geopolitics, China sanctions, Korea China relations, Korea Japan"
+)
 
 
 class SourcingTab(ctk.CTkFrame):
@@ -54,6 +63,8 @@ class SourcingTab(ctk.CTkFrame):
 
         self._build_header()
         self._build_body()
+        # 앱 시작 시 트렌딩 키워드 자동 로드
+        self.after(500, self._load_keywords_on_start)
 
     # ── 헤더 ─────────────────────────────────────────────────────
 
@@ -98,11 +109,35 @@ class SourcingTab(ctk.CTkFrame):
         kw_frame.grid(row=0, column=0, sticky="ew")
         kw_frame.grid_columnconfigure(0, weight=1)
 
-        ctk.CTkLabel(kw_frame, text="검색 키워드", text_color=self.C["dim"],
+        # 키워드 라벨 + 갱신 버튼
+        kw_label_row = ctk.CTkFrame(kw_frame, fg_color="transparent")
+        kw_label_row.grid(row=0, column=0, sticky="ew", padx=20, pady=(16, 2))
+        kw_label_row.grid_columnconfigure(0, weight=1)
+
+        ctk.CTkLabel(kw_label_row, text="검색 키워드",
+                     text_color=self.C["dim"],
                      font=F(size=11, weight="bold")).grid(
-            row=0, column=0, sticky="w", padx=20, pady=(16, 2))
+            row=0, column=0, sticky="w")
+
+        self._kw_status_lbl = ctk.CTkLabel(
+            kw_label_row, text="로딩 중...",
+            text_color=self.C["mute"], font=F(size=9),
+        )
+        self._kw_status_lbl.grid(row=0, column=1, padx=(6, 8), sticky="e")
+
+        self._kw_refresh_btn = ctk.CTkButton(
+            kw_label_row, text="갱신",
+            command=self._refresh_keywords,
+            height=20, width=44,
+            fg_color=self.C["panel2"], hover_color=self.C["panel3"],
+            text_color=self.C["dim"], font=F(size=10),
+            border_width=1, border_color=self.C["border"],
+            corner_radius=4,
+        )
+        self._kw_refresh_btn.grid(row=0, column=2, sticky="e")
+
         self._kw_entry = ctk.CTkTextbox(
-            kw_frame, height=64, fg_color=self.C["panel2"],
+            kw_frame, height=72, fg_color=self.C["panel2"],
             text_color=self.C["text"], font=F(size=12),
             border_width=1, border_color=self.C["border"],
         )
@@ -131,7 +166,7 @@ class SourcingTab(ctk.CTkFrame):
             row_idx += 1
 
             for src_id, src_name, src_desc in sources:
-                var = tk.BooleanVar(value=True)
+                var = tk.BooleanVar(value=(src_id in DEFAULT_CHECKED))
                 self._source_vars[src_id] = var
 
                 # 소스 카드
@@ -423,6 +458,62 @@ class SourcingTab(ctk.CTkFrame):
         }
         self.event_generate("<<SendToScript>>")
         self._set_status(f"'{art['title'][:40]}...' 를 대본 탭으로 전달했습니다.")
+
+    # ── 키워드 자동 갱신 ─────────────────────────────────────────
+
+    def _load_keywords_on_start(self) -> None:
+        """앱 시작 시 캐시된 키워드를 우선 로드합니다."""
+        self._kw_refresh_btn.configure(state="disabled", text="로딩...")
+        self.client.async_call(
+            self.client.get_trending_keywords,
+            refresh=False,
+            on_success=self._on_keywords_loaded,
+            on_error=self._on_keywords_error,
+        )
+
+    def _refresh_keywords(self) -> None:
+        """갱신 버튼 클릭 시 Google Trends에서 강제 새로고침합니다."""
+        self._kw_refresh_btn.configure(state="disabled", text="갱신 중...")
+        self._kw_status_lbl.configure(text="Google Trends 조회 중...")
+        self.client.async_call(
+            self.client.get_trending_keywords,
+            refresh=True,
+            on_success=self._on_keywords_loaded,
+            on_error=self._on_keywords_error,
+        )
+
+    def _on_keywords_loaded(self, result: dict) -> None:
+        self.after(0, lambda: self._apply_keywords(result))
+
+    def _on_keywords_error(self, msg: str) -> None:
+        self.after(0, lambda: self._kw_status_lbl.configure(
+            text="기본값 사용 중", text_color=self.C["mute"]))
+        self.after(0, lambda: self._kw_refresh_btn.configure(
+            state="normal", text="갱신"))
+
+    def _apply_keywords(self, result: dict) -> None:
+        keywords = result.get("keywords", [])
+        if not keywords:
+            return
+
+        # 키워드 입력창 업데이트
+        self._kw_entry.delete("1.0", "end")
+        self._kw_entry.insert("1.0", ", ".join(keywords))
+
+        # 상태 레이블: 소스 + 업데이트 시각
+        source = result.get("source", "")
+        updated_at = result.get("updated_at", "")
+        source_label = {
+            "google_trends": "Google Trends",
+            "cache": "캐시",
+            "fallback": "기본값",
+        }.get(source, source)
+
+        self._kw_status_lbl.configure(
+            text=f"{source_label} · {updated_at}",
+            text_color=self.C["green"] if source == "google_trends" else self.C["mute"],
+        )
+        self._kw_refresh_btn.configure(state="normal", text="갱신")
 
     def _set_status(self, msg: str, error: bool = False) -> None:
         color = self.C["accent"] if error else self.C["dim"]

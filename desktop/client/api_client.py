@@ -47,6 +47,11 @@ class APIClient:
     def get_sources_info(self) -> dict:
         return self._get("/api/v1/sourcing/sources")
 
+    def get_trending_keywords(self, refresh: bool = False) -> dict:
+        """Google Trends 기반 최신 트렌딩 키워드를 가져옵니다 (6시간 캐시)."""
+        param = "true" if refresh else "false"
+        return self._get(f"/api/v1/sourcing/keywords/trending?refresh={param}")
+
     # ── 대본 작성 ──────────────────────────────────────────────────
 
     def generate_script(

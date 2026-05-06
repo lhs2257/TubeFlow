@@ -57,6 +57,13 @@ async def collect_articles(req: CollectRequest):
     return CollectResponse(**result)
 
 
+@router.get("/keywords/trending")
+async def get_trending_keywords(refresh: bool = False):
+    """Google Trends 기반 최신 트렌딩 키워드를 반환합니다 (6시간 캐시)."""
+    from backend.core.content_sourcing.keyword_suggester import get_trending_keywords
+    return get_trending_keywords(force_refresh=refresh)
+
+
 @router.get("/sources")
 async def get_available_sources():
     rss_list = [

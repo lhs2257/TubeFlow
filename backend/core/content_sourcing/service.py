@@ -48,6 +48,8 @@ class ContentSourcingService:
             except Exception as e:
                 logger.warning("[%s] 수집 중 오류: %s", source, e)
 
+        # 최근 날짜순 정렬
+        articles.sort(key=lambda a: a.published_at, reverse=True)
         logger.info("소재 수집 완료 - 총 %d건", len(articles))
         return articles
 
