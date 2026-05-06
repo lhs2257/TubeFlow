@@ -10,7 +10,7 @@ from .templates import SYSTEM_PROMPT, build_user_prompt
 
 logger = get_logger(__name__)
 
-WORDS_PER_SECOND = 130 / 60  # 분당 130자 -> 초당
+CHARS_PER_SEC = 250 / 60  # 한국어 구어체 분당 약 250자 기준
 
 
 class ScriptGenerator:
@@ -31,7 +31,7 @@ class ScriptGenerator:
             source_body=req.source_body,
             tone=req.tone,
             language=req.language,
-            target_duration_min=req.target_duration_min,
+            target_duration_sec=req.target_duration_sec,
             channel_intro=req.channel_intro,
             channel_outro=req.channel_outro,
         )
@@ -70,10 +70,10 @@ class ScriptGenerator:
         for section_type, pattern in patterns.items():
             match = re.search(pattern, text, re.DOTALL)
             content = match.group(1).strip() if match else ""
-            duration = int(len(content) / WORDS_PER_SECOND)
+            duration = int(len(content) / CHARS_PER_SEC)
             sections.append(ScriptSection(type=section_type, content=content, duration_sec=duration))
 
         if not any(s.content for s in sections):
-            sections = [ScriptSection(type="main", content=text.strip(), duration_sec=int(len(text) / WORDS_PER_SECOND))]
+            sections = [ScriptSection(type="main", content=text.strip(), duration_sec=int(len(text) / CHARS_PER_SEC))]
 
         return sections

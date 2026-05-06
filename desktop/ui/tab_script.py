@@ -14,10 +14,10 @@ TONES = [
 ]
 
 DURATIONS = [
-    ("3",  "3분"),
-    ("5",  "5분"),
-    ("10", "10분"),
-    ("15", "15분+"),
+    ("30",  "30초"),
+    ("50",  "50초"),
+    ("90",  "1분30초"),
+    ("120", "2분"),
 ]
 
 
@@ -29,7 +29,7 @@ class ScriptTab(ctk.CTkFrame):
         self.client = client
         self.C = colors
         self._tone = "informative"
-        self._duration = "10"
+        self._duration = "50"
         self._pending_title: str = ""  # 업로드 탭으로 전달할 제목 임시 저장
 
         self.grid_columnconfigure(0, weight=1)
@@ -220,7 +220,7 @@ class ScriptTab(ctk.CTkFrame):
             right,
             fg_color=self.C["panel"],
             text_color=self.C["text"],
-            font=F(mono=True, size=13),
+            font=F(size=13),
             wrap="word",
             border_width=0,
         )
@@ -277,7 +277,7 @@ class ScriptTab(ctk.CTkFrame):
             source_url=url,
             tone=self._tone,
             language="ko",
-            target_duration_min=int(self._duration),
+            target_duration_sec=int(self._duration),
             on_success=self._on_gen_success,
             on_error=self._on_gen_error,
         )
@@ -307,20 +307,20 @@ class ScriptTab(ctk.CTkFrame):
         self._editor.insert("1.0", full_text)
 
         char_count = len(full_text)
-        est_min = result.get("estimated_duration_min", char_count // 130)
+        est_sec = result.get("total_duration_sec", int(char_count / (250 / 60)))
         self._script_info.configure(
-            text=f"{result.get('title', '')[:40]} · {char_count}자 · 약 {est_min}분",
+            text=f"{result.get('title', '')[:40]} · {char_count}자 · 약 {est_sec}초",
             text_color=self.C["text"],
         )
-        self._char_label.configure(text=f"{char_count}자 · 약 {est_min}분")
+        self._char_label.configure(text=f"{char_count}자 · 약 {est_sec}초")
         self._send_upload_btn.configure(state="normal")
         self._set_status("대본 생성 완료.")
 
     def _update_char_count(self, event=None) -> None:
         text = self._editor.get("1.0", "end").strip()
         chars = len(text)
-        est = chars // 130
-        self._char_label.configure(text=f"{chars}자 · 약 {est}분")
+        est_sec = int(chars / (250 / 60))
+        self._char_label.configure(text=f"{chars}자 · 약 {est_sec}초")
 
     def _save_script(self) -> None:
         text = self._editor.get("1.0", "end").strip()

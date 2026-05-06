@@ -48,6 +48,6 @@ class ScriptRequest:
     source_url: str = ""
     tone: str = "informative"       # informative | storytelling | humor | dramatic
     language: str = "ko"            # ko | en
-    target_duration_min: int = 10   # 목표 영상 길이(분)
+    target_duration_sec: int = 50   # 목표 영상 길이(초)
     channel_intro: str = ""         # 채널 고정 인트로 문구
     channel_outro: str = ""         # 채널 고정 아웃트로 문구

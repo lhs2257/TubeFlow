@@ -13,7 +13,7 @@ class GenerateRequest(BaseModel):
     source_url: str = Field(default="")
     tone: str = Field(default="storytelling")
     language: str = Field(default="ko")
-    target_duration_min: int = Field(default=10, ge=3, le=30)
+    target_duration_sec: int = Field(default=50, ge=15, le=180)
     channel_intro: str = Field(default="")
     channel_outro: str = Field(default="")
 
@@ -38,7 +38,7 @@ async def generate_script(req: GenerateRequest):
         source_url=req.source_url,
         tone=req.tone,
         language=req.language,
-        target_duration_min=req.target_duration_min,
+        target_duration_sec=req.target_duration_sec,
         channel_intro=req.channel_intro,
         channel_outro=req.channel_outro,
     )

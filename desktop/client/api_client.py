@@ -62,7 +62,7 @@ class APIClient:
         source_url: str = "",
         tone: str = "informative",
         language: str = "ko",
-        target_duration_min: int = 10,
+        target_duration_sec: int = 50,
     ) -> dict:
         return self._post("/api/v1/script/generate", {
             "source_title": source_title,
@@ -70,7 +70,7 @@ class APIClient:
             "source_url": source_url,
             "tone": tone,
             "language": language,
-            "target_duration_min": target_duration_min,
+            "target_duration_sec": target_duration_sec,
         })
 
     def get_tones(self) -> dict:
