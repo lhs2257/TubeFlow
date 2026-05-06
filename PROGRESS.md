@@ -1,6 +1,6 @@
 # 작업 현황 (PROGRESS.md)
 
-> 최종 업데이트: 2026-05-06 (번역 엔진 OpenAI GPT-4o-mini로 교체)
+> 최종 업데이트: 2026-05-06 (RSS 수집 개수 버그 수정 / 원문 버튼 위치 개선)
 
 ## 현재 단계
 
@@ -132,6 +132,9 @@
 ## 작업 로그 (계속)
 
 ### 2026-05-06
+- [v] 소재 수집 — RSS 수집 개수 버그 수정 및 UI 개선
+  - service.py: RSS limit_per_feed를 피드 수로 나누던 버그 수정 (소스당 limit 각각 적용)
+  - tab_sourcing.py: 원문 보기 버튼 위치 좌하단 → 우하단으로 변경
 - [v] 소재 수집 — 번역 엔진 OpenAI GPT-4o-mini로 교체
   - translator.py: deep-translator → OpenAI GPT-4o-mini (의역 기반 자연스러운 문어체)
   - 배치 처리 15건/호출로 API 비용 최소화 (20건 기준 약 $0.002)
