@@ -38,7 +38,7 @@ class ContentSourcingService:
                     # RSS는 선택된 피드 목록 전체를 한 번만 수집 (중복 방지)
                     if source == selected_rss[0]:
                         fetched = self._rss.fetch(
-                            limit_per_feed=max(1, config.limit // max(len(selected_rss), 1)),
+                            limit_per_feed=config.limit,  # 소스당 limit 적용
                             feed_ids=selected_rss,
                         )
                     else:

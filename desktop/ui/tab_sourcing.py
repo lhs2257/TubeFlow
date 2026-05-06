@@ -409,10 +409,10 @@ class SourcingTab(ctk.CTkFrame):
                          wraplength=500, anchor="w", justify="left").grid(
                 row=2, column=1, columnspan=2, sticky="ew", padx=4, pady=(2, 0))
 
-        # 원문 보기 버튼
+        # 원문 보기 버튼 (우하단)
         url = art.get("url", "")
         btn_frame = ctk.CTkFrame(row, fg_color="transparent")
-        btn_frame.grid(row=3, column=1, columnspan=2, sticky="w", padx=4, pady=(4, 8))
+        btn_frame.grid(row=3, column=1, columnspan=2, sticky="e", padx=(4, 12), pady=(4, 8))
 
         if url:
             link_btn = ctk.CTkButton(
