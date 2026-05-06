@@ -1,6 +1,6 @@
 # 작업 현황 (PROGRESS.md)
 
-> 최종 업데이트: 2026-05-06 (소재 한국어 자동 번역 추가)
+> 최종 업데이트: 2026-05-06 (번역 엔진 OpenAI GPT-4o-mini로 교체)
 
 ## 현재 단계
 
@@ -132,6 +132,11 @@
 ## 작업 로그 (계속)
 
 ### 2026-05-06
+- [v] 소재 수집 — 번역 엔진 OpenAI GPT-4o-mini로 교체
+  - translator.py: deep-translator → OpenAI GPT-4o-mini (의역 기반 자연스러운 문어체)
+  - 배치 처리 15건/호출로 API 비용 최소화 (20건 기준 약 $0.002)
+  - json_object 응답 포맷으로 파싱 안정성 향상
+  - 번역 실패 시 원문 폴백 유지
 - [v] 소재 수집 — 수집 소재 한국어 자동 번역
   - translator.py: deep-translator GoogleTranslator 기반, ThreadPoolExecutor 병렬 처리
   - 이미 한국어인 텍스트 자동 감지 (한글 비율 30% 이상 시 번역 생략)
