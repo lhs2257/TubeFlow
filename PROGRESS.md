@@ -1,6 +1,6 @@
 # 작업 현황 (PROGRESS.md)
 
-> 최종 업데이트: 2026-05-06 (키워드 자동 갱신 / 체크박스 기본값 / 날짜순 정렬)
+> 최종 업데이트: 2026-05-06 (소재 한국어 자동 번역 추가)
 
 ## 현재 단계
 
@@ -132,6 +132,13 @@
 ## 작업 로그 (계속)
 
 ### 2026-05-06
+- [v] 소재 수집 — 수집 소재 한국어 자동 번역
+  - translator.py: deep-translator GoogleTranslator 기반, ThreadPoolExecutor 병렬 처리
+  - 이미 한국어인 텍스트 자동 감지 (한글 비율 30% 이상 시 번역 생략)
+  - models.py: Article에 title_ko / body_ko 필드 추가
+  - service.py: collect() 완료 후 translate_articles() 자동 호출
+  - tab_sourcing.py: 제목/본문 미리보기 번역본 우선 표시
+  - requirements.txt: deep-translator==1.11.4 추가
 - [v] 소재 수집 — 키워드 자동 갱신 / 체크박스 기본값 / 날짜순 정렬
   - keyword_suggester.py: pytrends 기반 트렌딩 키워드 수집, 6시간 캐시, 폴백 16개
   - GET /api/v1/sourcing/keywords/trending 엔드포인트 추가

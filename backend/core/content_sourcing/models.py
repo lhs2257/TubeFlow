@@ -15,6 +15,8 @@ class Article:
     category: str = "travel"
     thumbnail: str = ""
     is_selected: bool = False
+    title_ko: str = ""   # 한국어 번역 제목 (번역 후 채워짐)
+    body_ko: str = ""    # 한국어 번역 본문 (번역 후 채워짐)
 
     def to_dict(self) -> dict:
         return {
@@ -29,6 +31,8 @@ class Article:
             "category": self.category,
             "thumbnail": self.thumbnail,
             "is_selected": self.is_selected,
+            "title_ko": self.title_ko,
+            "body_ko": self.body_ko,
         }
 
 

@@ -6,6 +6,7 @@ from .guardian import GuardianCollector
 from .newsapi import NewsAPICollector
 from .rss_reader import RSSCollector, RSS_FEEDS, RSS_SOURCE_IDS
 from .youtube_trend import YouTubeTrendCollector
+from .translator import translate_articles
 
 logger = get_logger(__name__)
 OUTPUT_DIR = Path("data/sourcing")
@@ -50,6 +51,14 @@ class ContentSourcingService:
 
         # 최근 날짜순 정렬
         articles.sort(key=lambda a: a.published_at, reverse=True)
+
+        # 한국어 번역 (title_ko / body_ko 채우기)
+        article_dicts = [a.to_dict() for a in articles]
+        article_dicts = translate_articles(article_dicts)
+        for art, d in zip(articles, article_dicts):
+            art.title_ko = d.get("title_ko", "")
+            art.body_ko  = d.get("body_ko",  "")
+
         logger.info("소재 수집 완료 - 총 %d건", len(articles))
         return articles
 

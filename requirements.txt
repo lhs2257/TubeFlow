@@ -18,6 +18,7 @@ requests==2.32.3
 # ── 소재 수집 ──────────────────────────────────────────────
 # Guardian API, NewsAPI, RSS: requests만으로 동작 (추가 패키지 불필요)
 feedparser==6.0.11             # RSS 파싱 보조
+deep-translator==1.11.4        # 한국어 번역 (Google 무료 백엔드)
 
 # ── 대본 작성 ──────────────────────────────────────────────
 openai==1.51.0                 # OpenAI API

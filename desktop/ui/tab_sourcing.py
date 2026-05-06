@@ -393,15 +393,15 @@ class SourcingTab(ctk.CTkFrame):
         ctk.CTkLabel(meta_frame, text=pub, text_color=self.C["mute"],
                      font=F(size=10)).grid(row=0, column=1, padx=(8, 0), sticky="e")
 
-        # 제목
-        title = art.get("title", "(제목 없음)")[:120]
+        # 제목 (번역본 우선, 없으면 원문)
+        title = (art.get("title_ko") or art.get("title", "(제목 없음)"))[:120]
         ctk.CTkLabel(row, text=title, text_color=self.C["text"],
                      font=F(size=12, weight="bold"),
                      wraplength=500, anchor="w", justify="left").grid(
             row=1, column=1, columnspan=2, sticky="ew", padx=4, pady=(2, 0))
 
-        # 요약 본문 (body 앞 120자)
-        body = art.get("body", "").strip()
+        # 요약 본문 (번역본 우선, 없으면 원문, 앞 120자)
+        body = (art.get("body_ko") or art.get("body", "")).strip()
         if body:
             preview = body[:120] + ("..." if len(body) > 120 else "")
             ctk.CTkLabel(row, text=preview, text_color=self.C["mute"],
@@ -452,12 +452,13 @@ class SourcingTab(ctk.CTkFrame):
             return
         art = selected[0]
         self._pending_transfer = {
-            "source_title": art.get("title", ""),
-            "source_body": art.get("body", ""),
-            "source_url": art.get("url", ""),
+            "source_title": art.get("title_ko") or art.get("title", ""),
+            "source_body":  art.get("body_ko")  or art.get("body",  ""),
+            "source_url":   art.get("url", ""),
         }
         self.event_generate("<<SendToScript>>")
-        self._set_status(f"'{art['title'][:40]}...' 를 대본 탭으로 전달했습니다.")
+        display_title = (art.get("title_ko") or art.get("title", ""))[:40]
+        self._set_status(f"'{display_title}...' 를 대본 탭으로 전달했습니다.")
 
     # ── 키워드 자동 갱신 ─────────────────────────────────────────
 
